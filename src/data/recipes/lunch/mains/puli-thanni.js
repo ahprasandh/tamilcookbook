@@ -1,0 +1,28 @@
+export default {
+  id: "puli-thanni",
+  name_en: "Puli Thanni (Tamarind Water)",
+  name_ta: "புளி தண்ணீ",
+  category: "lunch/mains",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "tamarind", name_en: "Tamarind (small lemon size)", quantity: 1, unit: "nos", shop_category: "spices" },
+    { item: "jaggery", name_en: "Jaggery", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "mustard", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 2, unit: "nos", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "turmeric", name_en: "Turmeric", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak tamarind in 2 cups warm water. Squeeze and extract juice. Strain.", text_ta: "புளியை 2 கப் வெதுவெதுப்பான நீரில் ஊற வைத்து கரைத்து வடிகட்டவும்." },
+    { order: 2, text_en: "Add turmeric, jaggery, salt to tamarind water. Boil for 5 mins.", text_ta: "புளி தண்ணீரில் மஞ்சள், வெல்லம், உப்பு சேர்த்து 5 நிமிடம் கொதிக்கவிடவும்." },
+    { order: 3, text_en: "Heat oil, splutter mustard, red chilli, curry leaves, asafoetida. Pour into tamarind water.", text_ta: "எண்ணெயில் கடுகு, காய்ந்த மிளகாய், கறிவேப்பிலை, பெருங்காயம் தாளித்து புளி தண்ணீரில் சேர்க்கவும்." },
+  ],
+  tags: ["quick", "tangy", "traditional"],
+};

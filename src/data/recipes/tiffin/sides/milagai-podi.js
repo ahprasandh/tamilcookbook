@@ -1,0 +1,26 @@
+export default {
+  id: "milagai-podi",
+  name_en: "Milagai Podi",
+  name_ta: "மிளகாய் பொடி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 8,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 10, unit: "nos", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.5, unit: "cup", shop_category: "grains" },
+    { item: "chana-dal", name_en: "Chana Dal", quantity: 0.25, unit: "cup", shop_category: "grains" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Dry roast urad dal and chana dal until golden. Set aside.", text_ta: "உளுத்தம் பருப்பு, கடலைப் பருப்பை வறுத்து எடுக்கவும்." },
+    { order: 2, text_en: "Dry roast red chillies until crisp. Let cool.", text_ta: "காய்ந்த மிளகாயை மொறுமொறுப்பாக வறுத்து ஆற விடவும்." },
+    { order: 3, text_en: "Grind everything together with asafoetida and salt into a coarse powder.", text_ta: "அனைத்தையும் பெருங்காயம், உப்பு சேர்த்து கொரகொரப்பாக பொடிக்கவும்." },
+    { order: 4, text_en: "Serve with sesame oil drizzled on idli/dosa.", text_ta: "நல்லெண்ணெய் விட்டு இட்லி/தோசையுடன் பரிமாறவும்." },
+  ],
+  tags: ["everyday", "condiment", "staple"],
+};

@@ -1,0 +1,28 @@
+export default {
+  id: "coconut-chutney",
+  name_en: "Coconut Chutney",
+  name_ta: "தேங்காய் சட்னி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "coconut", name_en: "Grated Coconut", quantity: 1, unit: "cup", shop_category: "other" },
+    { item: "green-chilli", name_en: "Green Chilli", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "ginger", name_en: "Ginger", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "roasted-gram", name_en: "Roasted Gram", quantity: 2, unit: "tbsp", shop_category: "grains" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.5, unit: "tsp", shop_category: "grains" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "oil", name_en: "Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Grind coconut, green chilli, ginger, and roasted gram with a little water to a smooth paste.", text_ta: "தேங்காய், பச்சை மிளகாய், இஞ்சி, பொட்டுக்கடலை சேர்த்து நீர் விட்டு அரைக்கவும்." },
+    { order: 2, text_en: "Heat oil. Add mustard seeds, urad dal, and curry leaves. Let them splutter.", text_ta: "எண்ணெயில் கடுகு, உளுத்தம்பருப்பு, கறிவேப்பிலை தாளிக்கவும்." },
+    { order: 3, text_en: "Add tempering to the ground chutney. Mix and serve with idli or dosa.", text_ta: "தாளிப்பை சட்னியில் சேர்த்து கலந்து பரிமாறவும்." },
+  ],
+  photos: ["final-1.jpg"],
+  tags: ["everyday", "quick", "side"],
+};

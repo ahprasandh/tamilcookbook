@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil Cookbook — UI Design</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,400&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="browser-window.jsx"></script>
+<script type="text/babel" src="tokens.jsx"></script>
+<script type="text/babel" src="page-calendar.jsx"></script>
+<script type="text/babel" src="page-recipes.jsx"></script>
+<script type="text/babel" src="page-shopping-admin.jsx"></script>
+<style>
+  body { margin: 0; font-family: 'DM Sans', sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+function App() {
+  return (
+    <DesignCanvas title="Tamil Cookbook — UI Design" bgColor="#f0ece6">
+      {/* Calendar */}
+      <DCSection id="calendar" title="📅 Calendar / Planner">
+        <DCArtboard id="cal-desktop" label="Desktop — Month View" width={1100} height={780}>
+          <CalendarDesktop />
+        </DCArtboard>
+        <DCArtboard id="cal-mobile" label="Mobile — Week View" width={402} height={874}>
+          <IOSDevice width={402} height={874}>
+            <CalendarMobile />
+          </IOSDevice>
+        </DCArtboard>
+        <DCArtboard id="cal-day" label="Mobile — Day Detail" width={402} height={874}>
+          <IOSDevice width={402} height={874}>
+            <DayDetailMobile />
+          </IOSDevice>
+        </DCArtboard>
+      </DCSection>
+
+      {/* Recipes */}
+      <DCSection id="recipes" title="📖 Recipe Pages">
+        <DCArtboard id="rec-list-desktop" label="Desktop — Recipe List" width={1100} height={780}>
+          <RecipeListDesktop />
+        </DCArtboard>
+        <DCArtboard id="rec-list-mobile" label="Mobile — Recipe List" width={402} height={874}>
+          <IOSDevice width={402} height={874}>
+            <RecipeListMobile />
+          </IOSDevice>
+        </DCArtboard>
+        <DCArtboard id="rec-detail-desktop" label="Desktop — Recipe Detail" width={1100} height={780}>
+          <RecipeDetailDesktop />
+        </DCArtboard>
+        <DCArtboard id="rec-detail-mobile" label="Mobile — Recipe Detail" width={402} height={874}>
+          <IOSDevice width={402} height={874}>
+            <RecipeDetailMobile />
+          </IOSDevice>
+        </DCArtboard>
+      </DCSection>
+
+      {/* Shopping */}
+      <DCSection id="shopping" title="🛒 Shopping List">
+        <DCArtboard id="shop-desktop" label="Desktop — Shopping List" width={1100} height={780}>
+          <ShoppingDesktop />
+        </DCArtboard>
+        <DCArtboard id="shop-mobile" label="Mobile — Shopping List" width={402} height={874}>
+          <IOSDevice width={402} height={874}>
+            <ShoppingMobile />
+          </IOSDevice>
+        </DCArtboard>
+      </DCSection>
+
+      {/* Admin */}
+      <DCSection id="admin" title="⚙️ Admin / Editor">
+        <DCArtboard id="admin-desktop" label="Desktop — Admin Panel" width={1100} height={780}>
+          <AdminDesktop />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

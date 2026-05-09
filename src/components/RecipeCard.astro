@@ -1,0 +1,58 @@
+---
+import VegDot from './VegDot.astro';
+import ComplexityDots from './ComplexityDots.astro';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  id: string;
+  name_en: string;
+  name_ta: string;
+  category: string;
+  veg: boolean;
+  complexity: 1 | 2 | 3;
+  prep_time_mins: number;
+  cook_time_mins: number;
+}
+
+const { id, name_en, name_ta, category, veg, complexity, prep_time_mins, cook_time_mins } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const totalTime = prep_time_mins + cook_time_mins;
+
+const placeholderColors: Record<string, string> = {
+  breakfast: '#FFF3D6',
+  kulambu: '#FDECEB',
+  poriyal: '#E8F5EA',
+  rice: '#FFF3D6',
+  chutney: '#F5F0E8',
+  snacks: '#FFF0E5',
+  desserts: '#F3E8FF',
+  nonveg: '#FDECEB',
+  kootu: '#E0F5F0',
+  sides: '#F5F0E8',
+};
+const bgColor = placeholderColors[category] || '#F5F0E8';
+---
+<a
+  href={`${base}recipes/${id}/`}
+  class="block bg-white rounded-lg shadow-sm border border-mist overflow-hidden hover:shadow-md hover:-translate-y-px transition-all duration-150 no-underline"
+>
+  {/* Image area */}
+  <div class="h-[110px] flex items-center justify-center" style={`background-color: ${bgColor};`}>
+    <img src={`${base}images/recipes/${id}.jpg`} alt={name_en} class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display=''" />
+    <svg class="w-10 h-10 text-stone opacity-15" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+  </div>
+
+  {/* Content */}
+  <div class="px-3 py-2.5">
+    <div class="flex items-center gap-1.5 mb-0.5">
+      <VegDot veg={veg} size="sm" />
+      <span class="text-[13px] font-bold text-bark leading-tight truncate">{name_en}</span>
+    </div>
+    <p class="font-tamil text-[11px] text-stone leading-tight mb-2 truncate">{name_ta}</p>
+    <div class="flex items-center gap-2">
+      <CategoryBadge category={category} size="sm" />
+      <ComplexityDots level={complexity} size="sm" />
+      <span class="text-[10px] text-smoke ml-auto">⏱ {totalTime}min</span>
+    </div>
+  </div>
+</a>

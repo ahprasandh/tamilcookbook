@@ -1,0 +1,27 @@
+export default {
+  id: "bread-omelette",
+  name_en: "Bread Omelette",
+  name_ta: "பிரெட் ஆம்லெட்",
+  category: "tiffin/mains",
+  veg: false,
+  complexity: 1,
+  servings: 2,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "bread", name_en: "Bread Slices", quantity: 4, unit: "nos", shop_category: "other" },
+    { item: "egg", name_en: "Eggs", quantity: 3, unit: "nos", shop_category: "other" },
+    { item: "onion", name_en: "Onion (finely chopped)", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "green-chilli", name_en: "Green Chilli (chopped)", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "coriander-leaves", name_en: "Coriander Leaves", quantity: 1, unit: "tbsp", shop_category: "vegetable" },
+    { item: "pepper", name_en: "Black Pepper Powder", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "butter", name_en: "Butter", quantity: 1, unit: "tbsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Beat eggs with onion, green chilli, coriander, pepper, salt.", text_ta: "முட்டையை வெங்காயம், பச்சை மிளகாய், கொத்தமல்லி, மிளகு, உப்புடன் அடிக்கவும்." },
+    { order: 2, text_en: "Heat butter on tawa. Dip bread slices in egg mixture, coating both sides.", text_ta: "தோசைக்கல்லில் வெண்ணெய் போட்டு பிரெட்டை முட்டை கலவையில் இருபுறமும் நனைக்கவும்." },
+    { order: 3, text_en: "Place on tawa, pour remaining egg around bread. Cook until golden on both sides.", text_ta: "கல்லில் வைத்து மீதி முட்டையை சுற்றி ஊற்றி இருபுறமும் பொன்னிறமாக சுடவும்." },
+  ],
+  tags: ["quick", "street-food"],
+};

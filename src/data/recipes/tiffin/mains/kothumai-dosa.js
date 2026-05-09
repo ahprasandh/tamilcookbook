@@ -1,0 +1,27 @@
+export default {
+  id: "kothumai-dosa",
+  name_en: "Kothumai Dosa",
+  name_ta: "கோதுமை தோசை",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 10,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "wheat-flour", name_en: "Wheat Flour (Atta)", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "rice-flour", name_en: "Rice Flour", quantity: 0.25, unit: "cup", shop_category: "grains" },
+    { item: "onion", name_en: "Onion (finely chopped)", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "green-chilli", name_en: "Green Chilli (chopped)", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "cumin", name_en: "Cumin Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves (chopped)", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Mix wheat flour, rice flour, onion, green chilli, cumin, curry leaves, salt with water into a thin batter.", text_ta: "கோதுமை மாவு, அரிசி மாவு, வெங்காயம், பச்சை மிளகாய், சீரகம், கறிவேப்பிலை, உப்பு சேர்த்து தண்ணீர் விட்டு தோசை மாவு பதத்தில் கரைக்கவும்." },
+    { order: 2, text_en: "Heat tawa, pour batter and spread thin. Drizzle oil around edges.", text_ta: "தோசைக்கல் காய்ந்ததும் மாவை ஊற்றி மெல்லியதாக பரப்பி ஓரங்களில் எண்ணெய் விடவும்." },
+    { order: 3, text_en: "Cook until golden on bottom, flip and cook other side. Serve with chutney.", text_ta: "அடிப்பகுதி பொன்னிறமானதும் திருப்பி வேகவைத்து சட்னியுடன் பரிமாறவும்." },
+  ],
+  tags: ["everyday", "healthy", "quick"],
+};

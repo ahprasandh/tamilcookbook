@@ -1,0 +1,26 @@
+export default {
+  id: "dosa",
+  name_en: "Dosa",
+  name_ta: "தோசை",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 480,
+  cook_time_mins: 20,
+  ingredients: [
+    { item: "dosa-rice", name_en: "Dosa Rice", quantity: 3, unit: "cup", shop_category: "grains" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "fenugreek-seeds", name_en: "Fenugreek Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak rice and urad dal with fenugreek seeds separately for 6-8 hours.", text_ta: "அரிசி மற்றும் உளுத்தம் பருப்பை வெந்தயத்துடன் 6-8 மணி நேரம் ஊற வைக்கவும்." },
+    { order: 2, text_en: "Grind to a smooth batter. Mix with salt and ferment overnight.", text_ta: "நன்கு அரைத்து உப்பு சேர்த்து இரவு முழுவதும் புளிக்க வைக்கவும்." },
+    { order: 3, text_en: "Heat a flat tawa. Pour a ladleful of batter and spread in circular motion.", text_ta: "தோசைக்கல்லை காய வைத்து மாவை ஊற்றி வட்டமாக பரப்பவும்." },
+    { order: 4, text_en: "Drizzle oil around edges. Cook until golden brown and crispy.", text_ta: "ஓரங்களில் எண்ணெய் விட்டு பொன்னிறமாக வேக விடவும்." },
+  ],
+  photos: ["final-1.jpg"],
+  tags: ["everyday", "crispy"],
+};

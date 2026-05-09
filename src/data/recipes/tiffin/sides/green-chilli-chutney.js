@@ -1,0 +1,25 @@
+export default {
+  id: "green-chilli-chutney",
+  name_en: "Green Chilli Chutney",
+  name_ta: "பச்சை மிளகாய் சட்னி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "green-chilli", name_en: "Green Chilli", quantity: 6, unit: "nos", shop_category: "vegetable" },
+    { item: "coriander-leaves", name_en: "Coriander Leaves", quantity: 0.5, unit: "cup", shop_category: "vegetable" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 0.25, unit: "cup", shop_category: "vegetable" },
+    { item: "onion", name_en: "Onion", quantity: 0.5, unit: "nos", shop_category: "vegetable" },
+    { item: "tamarind", name_en: "Tamarind", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Grind green chillies, coriander leaves, coconut, onion, tamarind, and salt into a smooth paste.", text_ta: "பச்சை மிளகாய், கொத்தமல்லி, தேங்காய், வெங்காயம், புளி, உப்பு சேர்த்து நைசாக அரைக்கவும்." },
+    { order: 2, text_en: "Temper with mustard seeds in oil and add to chutney.", text_ta: "எண்ணெயில் கடுகு தாளித்து சட்னியில் சேர்க்கவும்." },
+  ],
+  tags: ["everyday", "fresh", "condiment"],
+};

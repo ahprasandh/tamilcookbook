@@ -1,0 +1,27 @@
+export default {
+  id: "tomato-chutney",
+  name_en: "Tomato Chutney",
+  name_ta: "தக்காளி சட்னி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "tomato", name_en: "Tomato", quantity: 4, unit: "nos", shop_category: "vegetable" },
+    { item: "onion", name_en: "Onion", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "red-chilli", name_en: "Red Chilli", quantity: 3, unit: "nos", shop_category: "spices" },
+    { item: "garlic", name_en: "Garlic", quantity: 3, unit: "nos", shop_category: "vegetable" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.5, unit: "tsp", shop_category: "grains" },
+    { item: "oil", name_en: "Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Heat oil. Fry red chillies, garlic, and onion until golden.", text_ta: "எண்ணெயில் மிளகாய், பூண்டு, வெங்காயம் வறுக்கவும்." },
+    { order: 2, text_en: "Add tomatoes and cook until soft and mushy.", text_ta: "தக்காளி சேர்த்து குழைய வேக வைக்கவும்." },
+    { order: 3, text_en: "Cool and grind to a smooth paste. Temper with mustard seeds and urad dal.", text_ta: "ஆறியதும் அரைக்கவும். கடுகு, உளுத்தம்பருப்பு தாளிக்கவும்." },
+  ],
+  photos: ["final-1.jpg"],
+  tags: ["everyday", "quick", "tangy"],
+};

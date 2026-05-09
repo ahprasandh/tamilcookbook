@@ -1,0 +1,28 @@
+export default {
+  id: "chakkara-pongal",
+  name_en: "Chakkara Pongal",
+  name_ta: "சர்க்கரை பொங்கல்",
+  category: "desserts/items",
+  veg: true,
+  complexity: 2,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 25,
+  ingredients: [
+    { item: "raw-rice", name_en: "Raw Rice", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "moong-dal", name_en: "Moong Dal", quantity: 0.5, unit: "cup", shop_category: "grains" },
+    { item: "jaggery", name_en: "Jaggery (grated)", quantity: 1.5, unit: "cup", shop_category: "other" },
+    { item: "ghee", name_en: "Ghee", quantity: 4, unit: "tbsp", shop_category: "other" },
+    { item: "cashew", name_en: "Cashews", quantity: 10, unit: "nos", shop_category: "other" },
+    { item: "raisins", name_en: "Raisins", quantity: 10, unit: "nos", shop_category: "other" },
+    { item: "cardamom", name_en: "Cardamom Powder", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "camphor", name_en: "Edible Camphor", quantity: 1, unit: "pinch", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Dry roast moong dal until golden. Cook rice and dal together with 3 cups water until mushy.", text_ta: "பாசிப்பருப்பை வறுத்து அரிசியுடன் 3 கப் நீர் சேர்த்து குழைய வேகவைக்கவும்." },
+    { order: 2, text_en: "Dissolve jaggery in 0.5 cup warm water. Strain and add to cooked rice-dal.", text_ta: "வெல்லத்தை 0.5 கப் நீரில் கரைத்து வடிகட்டி சாதத்தில் சேர்க்கவும்." },
+    { order: 3, text_en: "Cook on low heat, stirring continuously until mixture thickens and comes together.", text_ta: "குறைந்த தீயில் கெட்டியாகும் வரை தொடர்ந்து கிளறவும்." },
+    { order: 4, text_en: "Add ghee, cardamom, camphor. Mix well. Fry cashews and raisins in ghee, add on top.", text_ta: "நெய், ஏலக்காய், பச்சைக்கற்பூரம் சேர்த்து கிளறி நெய்யில் வறுத்த முந்திரி, திராட்சை சேர்க்கவும்." },
+  ],
+  tags: ["festival", "sweet", "traditional"],
+};

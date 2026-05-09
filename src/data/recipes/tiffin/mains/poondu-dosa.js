@@ -1,0 +1,26 @@
+export default {
+  id: "poondu-dosa",
+  name_en: "Poondu Dosa",
+  name_ta: "பூண்டு தோசை",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "dosa-batter", name_en: "Dosa Batter", quantity: 2, unit: "cup", shop_category: "grains" },
+    { item: "garlic", name_en: "Garlic (crushed)", quantity: 8, unit: "nos", shop_category: "vegetable" },
+    { item: "red-chilli-powder", name_en: "Red Chilli Powder", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "cumin", name_en: "Cumin Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves (chopped)", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Crush garlic coarsely with cumin, red chilli powder, and salt in a mortar.", text_ta: "பூண்டை சீரகம், மிளகாய்த்தூள், உப்புடன் அம்மியில் தட்டவும்." },
+    { order: 2, text_en: "Heat tawa, pour dosa batter and spread thin. Spread garlic mixture and chopped curry leaves on top.", text_ta: "தோசைக்கல்லில் மாவு ஊற்றி பரப்பி பூண்டு கலவை, கறிவேப்பிலை தூவவும்." },
+    { order: 3, text_en: "Drizzle sesame oil around edges. Cook until crisp and golden. Serve hot.", text_ta: "நல்லெண்ணெய் விட்டு மொறுமொறுப்பாக சுட்டு பரிமாறவும்." },
+  ],
+  tags: ["crispy", "spicy", "quick"],
+};

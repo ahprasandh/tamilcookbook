@@ -1,0 +1,24 @@
+---
+interface Props {
+  type: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+  label: string;
+}
+
+const { type, label } = Astro.props;
+
+const styles: Record<string, { dot: string; bg: string; text: string }> = {
+  breakfast: { dot: 'bg-turmeric', bg: 'bg-turmeric-light', text: 'text-turmeric' },
+  lunch: { dot: 'bg-leaf', bg: 'bg-leaf-light', text: 'text-leaf' },
+  dinner: { dot: 'bg-dinner', bg: 'bg-dinner-light', text: 'text-dinner' },
+  snacks: { dot: 'bg-clay', bg: 'bg-clay-light', text: 'text-clay' },
+};
+
+const s = styles[type];
+---
+<span
+  class:list={['inline-flex items-center gap-1.5 rounded-full px-2 py-[3px]', s.bg]}
+  aria-label={`${type}: ${label}`}
+>
+  <span class:list={['w-1.5 h-1.5 rounded-full', s.dot]}></span>
+  <span class:list={['text-[11px] font-semibold leading-none', s.text]}>{label}</span>
+</span>

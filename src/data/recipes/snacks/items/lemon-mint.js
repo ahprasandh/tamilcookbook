@@ -1,0 +1,25 @@
+export default {
+  id: "lemon-mint",
+  name_en: "Lemon Mint Juice",
+  name_ta: "எலுமிச்சை புதினா ஜூஸ்",
+  category: "desserts/items",
+  veg: true,
+  complexity: 1,
+  servings: 2,
+  prep_time_mins: 5,
+  cook_time_mins: 0,
+  ingredients: [
+    { item: "lemon", name_en: "Lemon", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "mint", name_en: "Mint Leaves", quantity: 1, unit: "handful", shop_category: "vegetable" },
+    { item: "sugar", name_en: "Sugar", quantity: 3, unit: "tbsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "pinch", shop_category: "spices" },
+    { item: "water", name_en: "Cold Water", quantity: 2, unit: "cup", shop_category: "other" },
+    { item: "ice", name_en: "Ice Cubes", quantity: 4, unit: "nos", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Blend mint leaves with little water. Strain.", text_ta: "புதினாவை சிறிது நீருடன் அடித்து வடிகட்டவும்." },
+    { order: 2, text_en: "Mix lemon juice, sugar, salt, mint extract, and cold water. Stir well.", text_ta: "எலுமிச்சை சாறு, சர்க்கரை, உப்பு, புதினா சாறு, தண்ணீர் கலக்கவும்." },
+    { order: 3, text_en: "Serve with ice cubes and mint sprig.", text_ta: "ஐஸ் கட்டிகள், புதினா இலையுடன் பரிமாறவும்." },
+  ],
+  tags: ["beverage", "summer", "refreshing"],
+};

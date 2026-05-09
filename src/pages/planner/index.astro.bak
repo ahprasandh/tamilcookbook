@@ -1,0 +1,451 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import recipes from '../../data/recipes.js';
+import foods, { getFoodsByCategory } from '../../data/foods.js';
+import plannerJson from '../../data/planner.json';
+
+const recipeMap = {};
+recipes.forEach((r) => {
+  recipeMap[r.id] = { id: r.id, name_en: r.name_en, name_ta: r.name_ta, category: r.category, veg: r.veg };
+});
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
+const tiffinFoods = getFoodsByCategory('tiffin');
+const lunchFoods = getFoodsByCategory('lunch');
+const snackItems = recipes.filter(r => r.category === 'snacks/items' || r.category === 'desserts/items');
+---
+<BaseLayout title="Planner — Tamil Cookbook" active="planner">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-6">
+    {/* Week Header */}
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <button id="prev-week" class="text-stone hover:text-bark cursor-pointer text-lg px-2">◀</button>
+        <h1 id="week-title" class="text-lg md:text-xl font-extrabold text-bark"></h1>
+        <button id="next-week" class="text-stone hover:text-bark cursor-pointer text-lg px-2">▶</button>
+      </div>
+      <button id="today-btn" class="rounded-md bg-sand text-bark text-xs font-semibold px-3 py-1.5 cursor-pointer hover:bg-mist">This week</button>
+    </div>
+
+    {/* Rotation Rules */}
+    <details class="bg-white rounded-lg border border-mist px-4 py-2.5 mb-4 text-xs text-stone">
+      <summary class="font-bold text-bark cursor-pointer">📋 Rotation Rules / சுழற்சி விதிகள்</summary>
+      <div class="mt-2 space-y-2">
+        <p><span class="font-semibold text-[#E8A317]">Tiffin (டிபன்)</span> — All combos must be served before any combo repeats. Same main is OK if side differs.<br/>
+        <span class="text-stone">அனைத்து காம்போக்களும் பரிமாறப்பட்ட பிறகே மீண்டும் திரும்பும். முதன்மை உணவு ஒன்றாக இருந்தாலும் பக்க உணவு வேறாக இருக்கலாம்.</span></p>
+        <p><span class="font-semibold text-[#2D7A3A]">Lunch (மதிய உணவு)</span> — ① Main can't repeat within a rotation (all mains used before any repeats). ② Exact combo can't repeat until ALL combos are done.<br/>
+        <span class="text-stone">① ஒரு சுழற்சியில் முதன்மை உணவு திரும்பாது. ② அனைத்து காம்போக்களும் முடிந்த பிறகே மீண்டும் வரும்.</span></p>
+      </div>
+    </details>
+
+    {/* Two Column Layout */}
+    <div class="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-5">
+      {/* LEFT: Suggestions Panel */}
+      <div class="order-2 md:order-1">
+        {/* Toggle: Tiffin / Lunch */}
+        <div class="flex rounded-lg bg-sand p-1 mb-3">
+          <button id="tab-tiffin" class="flex-1 rounded-md text-xs font-bold py-2 cursor-pointer bg-white text-bark shadow-sm">Tiffin (BF/Dinner)</button>
+          <button id="tab-lunch" class="flex-1 rounded-md text-xs font-bold py-2 cursor-pointer text-stone">Lunch</button>
+        </div>
+
+        {/* Rotation status */}
+        <div id="rotation-info" class="text-[10px] text-stone mb-3 px-1"></div>
+
+        {/* Food combo list */}
+        <div id="combo-list" class="space-y-1.5 max-h-[calc(100vh-220px)] overflow-y-auto pr-1"></div>
+      </div>
+
+      {/* RIGHT: Week Days */}
+      <div class="order-1 md:order-2">
+        <div id="week-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+
+        {/* Export */}
+        <div id="save-bar" class="hidden mt-4 bg-white rounded-lg border border-mist p-3 flex items-center justify-between">
+          <p class="text-xs text-stone">Unsaved changes</p>
+          <button id="export-planner" class="rounded-md bg-turmeric text-white text-xs font-semibold px-4 py-2 cursor-pointer">💾 Export planner.json</button>
+        </div>
+      </div>
+    </div>
+
+    {/* Toast */}
+    <div id="toast" class="hidden fixed top-4 right-4 bg-leaf text-white rounded-md px-4 py-2 text-sm font-semibold shadow-lg z-50"></div>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ recipeMap, base, plannerJson, foodsData: foods, snackData: snackItems.map(s => ({id: s.id, name_en: s.name_en})) }}>
+  window.__RECIPE_MAP = recipeMap;
+  window.__BASE = base;
+  window.__PLANNER = plannerJson;
+  window.__FOODS = foodsData;
+  window.__SNACKS = snackData;
+</script>
+
+<script>
+  const recipeMap = window.__RECIPE_MAP;
+  const imgBase = window.__BASE + 'images/recipes/';
+  const allFoods = window.__FOODS;
+  const snackItems = window.__SNACKS;
+  let plannerData = JSON.parse(JSON.stringify(window.__PLANNER));
+  let modified = false;
+
+  // State
+  let weekStart = getMonday(new Date());
+  let activeTab = 'tiffin'; // 'tiffin' or 'lunch'
+  let activeSlot = null; // { day: 'YYYY-MM-DD', meal: 'breakfast'|'lunch'|'dinner' }
+
+  function getMonday(d) {
+    const dt = new Date(d);
+    const day = dt.getDay();
+    const diff = dt.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(dt.setDate(diff));
+  }
+
+  function fmtDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  function mk(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+  function rName(id) { return recipeMap[id]?.name_en || id; }
+
+  function getWeekDays() {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekStart);
+      d.setDate(d.getDate() + i);
+      days.push(d);
+    }
+    return days;
+  }
+
+  function getDayData(dateStr) {
+    const month = dateStr.substring(0, 7);
+    return plannerData[month]?.[dateStr] || null;
+  }
+
+  function setDayData(dateStr, data) {
+    const month = dateStr.substring(0, 7);
+    if (!plannerData[month]) plannerData[month] = {};
+    if (data && Object.keys(data).length) {
+      plannerData[month][dateStr] = data;
+    } else {
+      delete plannerData[month][dateStr];
+    }
+    modified = true;
+  }
+
+  // ---- Rotation Logic ----
+  function getTiffinUsed() {
+    const pool = allFoods.filter(f => f.category === 'tiffin').map(f => f.id);
+    if (!pool.length) return { used: [], pool };
+    const allDays = [];
+    Object.entries(plannerData).forEach(([month, days]) => {
+      Object.entries(days).forEach(([dk, data]) => allDays.push({ dk, data }));
+    });
+    allDays.sort((a, b) => a.dk.localeCompare(b.dk));
+    let used = [];
+    for (const { data } of allDays) {
+      for (const slot of ['breakfast', 'dinner']) {
+        const fid = data[slot];
+        if (!fid || !pool.includes(fid)) continue;
+        if (used.includes(fid)) { used = [fid]; }
+        else { used.push(fid); }
+        if (used.length === pool.length) used = [];
+      }
+    }
+    return { used, pool };
+  }
+
+  function getLunchUsed() {
+    const allLunch = allFoods.filter(f => f.category === 'lunch');
+    const pool = allLunch.map(f => f.id);
+    const mainPool = [...new Set(allLunch.map(f => f.main))];
+    if (!pool.length) return { usedCombos: [], usedMains: [], pool, mainPool };
+    const allDays = [];
+    Object.entries(plannerData).forEach(([month, days]) => {
+      Object.entries(days).forEach(([dk, data]) => allDays.push({ dk, data }));
+    });
+    allDays.sort((a, b) => a.dk.localeCompare(b.dk));
+    let usedCombos = [];
+    let usedMains = [];
+    for (const { data } of allDays) {
+      const fid = data.lunch;
+      if (!fid || !pool.includes(fid)) continue;
+      const food = allFoods.find(x => x.id === fid);
+      if (!food) continue;
+      if (usedMains.includes(food.main)) { usedMains = [food.main]; }
+      else { usedMains.push(food.main); }
+      if (usedMains.length === mainPool.length) usedMains = [];
+      if (usedCombos.includes(fid)) { usedCombos = [fid]; }
+      else { usedCombos.push(fid); }
+      if (usedCombos.length === pool.length) usedCombos = [];
+    }
+    return { usedCombos, usedMains, pool, mainPool };
+  }
+
+  // ---- Render ----
+  function render() {
+    renderWeekTitle();
+    renderWeekGrid();
+    renderComboList();
+    updateSaveBar();
+  }
+
+  function renderWeekTitle() {
+    const days = getWeekDays();
+    const s = days[0], e = days[6];
+    const opts = { month: 'short', day: 'numeric' };
+    document.getElementById('week-title').textContent = `${s.toLocaleDateString('en-US', opts)} — ${e.toLocaleDateString('en-US', opts)}, ${e.getFullYear()}`;
+  }
+
+  function renderWeekGrid() {
+    const days = getWeekDays();
+    const today = fmtDate(new Date());
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    let html = '';
+    days.forEach((d, i) => {
+      const dateStr = fmtDate(d);
+      const data = getDayData(dateStr);
+      const isToday = dateStr === today;
+      const isWeekend = i >= 5;
+      const border = isToday ? 'border-turmeric border-2' : 'border-mist';
+
+      html += `<div class="bg-white rounded-lg ${border} border overflow-hidden">
+        <div class="px-3 py-2 ${isToday ? 'bg-turmeric-light' : 'bg-sand'}">
+          <span class="text-[11px] font-bold text-bark">${dayNames[i]}</span>
+          <span class="text-[11px] text-stone ml-1">${d.getDate()}</span>
+        </div>
+        <div class="p-2 space-y-1">`;
+
+      // Breakfast slot
+      html += mealSlot(dateStr, 'breakfast', data?.breakfast, '☀️', '#E8A317');
+      // Lunch slot
+      html += mealSlot(dateStr, 'lunch', data?.lunch, '🍚', '#2D7A3A');
+      // Dinner slot
+      html += mealSlot(dateStr, 'dinner', data?.dinner, '🌙', '#D35400');
+      // Snacks (weekends)
+      if (isWeekend && data?.snacks?.[0]) {
+        html += `<div class="text-[10px] text-stone px-1.5 py-0.5 rounded bg-sand/50">🍿 ${rName(data.snacks[0])}</div>`;
+      }
+
+      html += `</div></div>`;
+    });
+
+    document.getElementById('week-grid').innerHTML = html;
+
+    // Attach slot click handlers
+    document.querySelectorAll('[data-slot]').forEach(el => {
+      el.addEventListener('click', () => {
+        const [dateStr, meal] = el.dataset.slot.split('|');
+        setActiveSlot(dateStr, meal);
+      });
+    });
+  }
+
+  function mealSlot(dateStr, meal, foodId, icon, color) {
+    const isActive = activeSlot?.day === dateStr && activeSlot?.meal === meal;
+    const ring = isActive ? `ring-2 ring-[${color}]` : '';
+    const food = foodId ? allFoods.find(x => x.id === foodId) : null;
+    const label = food ? food.name_en : '';
+    const empty = !food;
+    const bgActive = isActive ? 'bg-sand' : '';
+
+    if (empty) {
+      return `<div data-slot="${dateStr}|${meal}" class="flex items-center gap-1 px-1.5 py-1 rounded cursor-pointer hover:bg-sand ${ring} ${bgActive} group">
+        <span class="text-[10px]">${icon}</span>
+        <span class="text-[10px] text-smoke group-hover:text-stone">+ ${meal === 'breakfast' ? 'bf' : meal === 'dinner' ? 'dn' : 'lunch'}</span>
+      </div>`;
+    }
+    return `<div data-slot="${dateStr}|${meal}" class="flex items-center gap-1 px-1.5 py-1 rounded cursor-pointer hover:bg-sand ${ring} ${bgActive}">
+      <span class="text-[10px]">${icon}</span>
+      <span class="text-[10px] font-semibold text-bark truncate">${label}</span>
+      <button data-clear="${dateStr}|${meal}" class="ml-auto text-[9px] text-smoke hover:text-clay cursor-pointer">✕</button>
+    </div>`;
+  }
+
+  function setActiveSlot(dateStr, meal) {
+    activeSlot = { day: dateStr, meal };
+    // Switch tab to match meal type
+    if (meal === 'lunch') {
+      activeTab = 'lunch';
+    } else {
+      activeTab = 'tiffin';
+    }
+    render();
+  }
+
+  // ---- Find assigned dates for a food id ----
+  function getAssignedDates(foodId) {
+    const dates = [];
+    Object.entries(plannerData).forEach(([month, days]) => {
+      Object.entries(days).forEach(([dateStr, data]) => {
+        if (data.breakfast === foodId || data.lunch === foodId || data.dinner === foodId) {
+          dates.push(dateStr);
+        }
+      });
+    });
+    dates.sort();
+    return dates;
+  }
+
+  function fmtShort(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  // ---- Left Panel: Combo suggestions ----
+  function renderComboList() {
+    updateTabStyles();
+    const container = document.getElementById('combo-list');
+    const rotInfo = document.getElementById('rotation-info');
+
+    if (activeTab === 'tiffin') {
+      const { used, pool } = getTiffinUsed();
+      const tiffinFoods = allFoods.filter(f => f.category === 'tiffin');
+      rotInfo.innerHTML = `🔄 ${used.length}/${pool.length} used this round · <span class="text-leaf font-semibold">${pool.length - used.length} remaining</span>`;
+
+      container.innerHTML = tiffinFoods.map(f => {
+        const isUsed = used.includes(f.id);
+        const opacity = isUsed ? 'opacity-40' : '';
+        const strike = isUsed ? 'line-through' : '';
+        const mainName = recipeMap[f.main]?.name_en || f.main;
+        const mainTa = recipeMap[f.main]?.name_ta || '';
+        const sideNames = f.sides.map(s => recipeMap[s]?.name_en || s).join(', ');
+        const sideTa = f.sides.map(s => recipeMap[s]?.name_ta || '').filter(Boolean).join(', ');
+        const assigned = getAssignedDates(f.id);
+        const dateLabel = assigned.length ? assigned.map(fmtShort).join(', ') : '';
+        const thumbId = f.main;
+        const sideThumbs = f.sides.map(s => `<img src="${imgBase}${s}.jpg" alt="" class="w-10 h-10 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'">`).join('');
+        return `<div data-assign="${f.id}" class="${opacity} rounded-lg border border-mist bg-white px-2 py-2 cursor-pointer hover:border-[#E8A317] hover:bg-[#E8A317]/5 transition-colors flex gap-2 items-center">
+          <img src="${imgBase}${thumbId}.jpg" alt="" class="w-10 h-10 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'">
+          ${sideThumbs}
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-bark ${strike} truncate">${mainName} + ${sideNames}</span>
+              ${dateLabel ? `<span class="text-[9px] text-stone font-medium flex-shrink-0 ml-1">${dateLabel}</span>` : ''}
+            </div>
+            <span class="block text-[10px] text-stone ${strike} truncate font-tamil">${mainTa}${sideTa ? ' + ' + sideTa : ''}</span>
+          </div>
+        </div>`;
+      }).join('');
+    } else {
+      const { usedCombos, usedMains, pool, mainPool } = getLunchUsed();
+      const lunchFoods = allFoods.filter(f => f.category === 'lunch');
+      const remMains = mainPool.filter(m => !usedMains.includes(m)).map(m => rName(m));
+      rotInfo.innerHTML = `🔄 Mains remaining: <strong>${remMains.join(', ') || 'new round'}</strong> · Combos: ${usedCombos.length}/${pool.length}`;
+
+      container.innerHTML = lunchFoods.map(f => {
+        const mainBlocked = usedMains.includes(f.main);
+        const comboBlocked = usedCombos.includes(f.id);
+        const blocked = mainBlocked || comboBlocked;
+        const opacity = blocked ? 'opacity-40' : '';
+        const strike = blocked ? 'line-through' : '';
+        const mainName = recipeMap[f.main]?.name_en || f.main;
+        const mainTa = recipeMap[f.main]?.name_ta || '';
+        const sideNames = f.sides.map(s => recipeMap[s]?.name_en || s).join(', ');
+        const sideTa = f.sides.map(s => recipeMap[s]?.name_ta || '').filter(Boolean).join(', ');
+        const reason = mainBlocked ? '(main used)' : comboBlocked ? '(combo done)' : '';
+        const assigned = getAssignedDates(f.id);
+        const dateLabel = assigned.length ? assigned.map(fmtShort).join(', ') : '';
+        const thumbId = f.main;
+        const sideThumbs = f.sides.map(s => `<img src="${imgBase}${s}.jpg" alt="" class="w-10 h-10 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'">`).join('');
+        return `<div data-assign="${f.id}" class="${opacity} rounded-lg border border-mist bg-white px-2 py-2 cursor-pointer hover:border-[#2D7A3A] hover:bg-[#2D7A3A]/5 transition-colors flex gap-2 items-center">
+          <img src="${imgBase}${thumbId}.jpg" alt="" class="w-10 h-10 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'">
+          ${sideThumbs}
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-bark ${strike} truncate">${mainName} + ${sideNames}</span>
+              <span class="text-[9px] ${reason ? 'text-clay' : 'text-stone'} font-medium flex-shrink-0 ml-1">${reason || dateLabel}</span>
+            </div>
+            <span class="block text-[10px] text-stone ${strike} truncate font-tamil">${mainTa}${sideTa ? ' + ' + sideTa : ''}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Click to assign
+    container.querySelectorAll('[data-assign]').forEach(el => {
+      el.addEventListener('click', () => {
+        if (!activeSlot) { showToast('Click a meal slot first'); return; }
+        const foodId = el.dataset.assign;
+        const food = allFoods.find(x => x.id === foodId);
+        if (!food) return;
+        // Check category matches slot
+        if (activeSlot.meal === 'lunch' && food.category !== 'lunch') return;
+        if ((activeSlot.meal === 'breakfast' || activeSlot.meal === 'dinner') && food.category !== 'tiffin') return;
+
+        const data = getDayData(activeSlot.day) || {};
+        data[activeSlot.meal] = foodId;
+        setDayData(activeSlot.day, data);
+        showToast(`${food.name_en} → ${activeSlot.meal}`);
+        render();
+      });
+    });
+
+    // Clear buttons
+    document.querySelectorAll('[data-clear]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const [dateStr, meal] = el.dataset.clear.split('|');
+        const data = getDayData(dateStr);
+        if (data) {
+          delete data[meal];
+          setDayData(dateStr, data);
+          render();
+        }
+      });
+    });
+  }
+
+  function updateTabStyles() {
+    const tBtn = document.getElementById('tab-tiffin');
+    const lBtn = document.getElementById('tab-lunch');
+    if (activeTab === 'tiffin') {
+      tBtn.className = 'flex-1 rounded-md text-xs font-bold py-2 cursor-pointer bg-white text-bark shadow-sm';
+      lBtn.className = 'flex-1 rounded-md text-xs font-bold py-2 cursor-pointer text-stone';
+    } else {
+      lBtn.className = 'flex-1 rounded-md text-xs font-bold py-2 cursor-pointer bg-white text-bark shadow-sm';
+      tBtn.className = 'flex-1 rounded-md text-xs font-bold py-2 cursor-pointer text-stone';
+    }
+  }
+
+  // ---- Save / Export ----
+  function updateSaveBar() {
+    document.getElementById('save-bar').classList.toggle('hidden', !modified);
+  }
+
+  function exportPlanner() {
+    const blob = new Blob([JSON.stringify(plannerData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'planner.json'; a.click();
+    URL.revokeObjectURL(url);
+    modified = false;
+    updateSaveBar();
+    showToast('planner.json exported');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'fixed top-4 right-4 bg-leaf text-white rounded-md px-4 py-2 text-sm font-semibold shadow-lg z-50';
+    setTimeout(() => t.classList.add('hidden'), 2500);
+  }
+
+  // ---- Init ----
+  document.getElementById('prev-week').addEventListener('click', () => {
+    weekStart.setDate(weekStart.getDate() - 7);
+    weekStart = new Date(weekStart);
+    render();
+  });
+  document.getElementById('next-week').addEventListener('click', () => {
+    weekStart.setDate(weekStart.getDate() + 7);
+    weekStart = new Date(weekStart);
+    render();
+  });
+  document.getElementById('today-btn').addEventListener('click', () => {
+    weekStart = getMonday(new Date());
+    render();
+  });
+  document.getElementById('tab-tiffin').addEventListener('click', () => { activeTab = 'tiffin'; renderComboList(); });
+  document.getElementById('tab-lunch').addEventListener('click', () => { activeTab = 'lunch'; renderComboList(); });
+  document.getElementById('export-planner').addEventListener('click', exportPlanner);
+
+  render();
+</script>

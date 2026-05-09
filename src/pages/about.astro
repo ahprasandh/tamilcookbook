@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<BaseLayout title="About — Tamil Cookbook" active="about">
+  <div class="max-w-2xl mx-auto px-4 md:px-8 py-12">
+    <h1 class="text-2xl font-extrabold text-bark mb-4">About Tamil Cookbook</h1>
+    <p class="text-stone leading-relaxed mb-4">
+      A monthly meal planner for Tamil South Indian recipes. Plan your breakfast, lunch, dinner, and weekend snacks — then generate a weekly shopping list automatically.
+    </p>
+    <p class="text-stone leading-relaxed mb-4">
+      All recipes are stored in the source code and served as a static site. The planner data is fetched from the cloud, so changes are live instantly without rebuilding.
+    </p>
+    <h2 class="text-lg font-bold text-bark mt-8 mb-2">How it works</h2>
+    <ol class="list-decimal list-inside text-stone leading-relaxed space-y-1">
+      <li>Browse recipes by category on the <a href={`${base}recipes/`} class="text-turmeric hover:underline">Recipes</a> page</li>
+      <li>Plan meals using the <a href={`${base}planner/`} class="text-turmeric hover:underline">Planner</a></li>
+      <li>View your month's plan on the <a href={`${base}`} class="text-turmeric hover:underline">Calendar</a></li>
+      <li>Check the <a href={`${base}shopping/`} class="text-turmeric hover:underline">Shopping List</a> before heading to the store</li>
+    </ol>
+    <h2 class="text-lg font-bold text-bark mt-8 mb-2">Tech Stack</h2>
+    <ul class="list-disc list-inside text-stone leading-relaxed space-y-1">
+      <li>Astro (Static Site Generator)</li>
+      <li>Tailwind CSS</li>
+      <li>GitHub Pages</li>
+      <li>Pantry Cloud (planner storage)</li>
+    </ul>
+    <p class="text-smoke text-sm mt-8">
+      Built with care for Tamil home cooking.
+    </p>
+  </div>
+</BaseLayout>

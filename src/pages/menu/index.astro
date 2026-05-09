@@ -1,0 +1,473 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import foods, { getFoodsByCategory } from '../../data/foods.js';
+import recipes from '../../data/recipes.js';
+
+const recipeMap = {};
+recipes.forEach((r) => { recipeMap[r.id] = r; });
+const imgBase = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
+const tiffinFoods = getFoodsByCategory('tiffin');
+const lunchFoods = getFoodsByCategory('lunch');
+
+const tiffinMainRecipes = recipes.filter(r => r.category === 'tiffin/mains');
+const tiffinSideRecipes = recipes.filter(r => r.category === 'tiffin/sides' || r.category === 'accompaniments/items');
+const lunchMainRecipes = recipes.filter(r => r.category === 'lunch/mains');
+const lunchSideRecipes = recipes.filter(r => r.category === 'lunch/sides' || r.category === 'accompaniments/items');
+
+// Group combos by main
+function groupByMain(combos) {
+  const groups = {};
+  combos.forEach(f => {
+    if (!groups[f.main]) groups[f.main] = [];
+    groups[f.main].push(f);
+  });
+  return Object.entries(groups);
+}
+const tiffinGroups = groupByMain(tiffinFoods);
+const lunchGroups = groupByMain(lunchFoods);
+---
+<BaseLayout title="Menu — Tamil Cookbook" active="menu">
+  <div class="max-w-5xl mx-auto px-4 md:px-8 py-6">
+
+    {/* Page Header */}
+    <div class="mb-8">
+      <h1 class="text-2xl font-extrabold text-bark">Menu</h1>
+      <p class="text-sm text-stone mt-1">Build food combos for the weekly planner. Click any combo to edit inline.</p>
+    </div>
+
+    {/* Tab Switcher */}
+    <div class="flex border-b border-mist mb-6">
+      <button id="tab-tiffin" class="menu-tab px-5 py-2.5 text-sm font-bold border-b-2 border-[#E8A317] text-[#E8A317] cursor-pointer">
+        Tiffin <span class="ml-1 text-xs bg-[#E8A317]/10 rounded-full px-2 py-0.5">{tiffinFoods.length}</span>
+      </button>
+      <button id="tab-lunch" class="menu-tab px-5 py-2.5 text-sm font-bold border-b-2 border-transparent text-stone cursor-pointer hover:text-bark">
+        Lunch <span class="ml-1 text-xs bg-sand rounded-full px-2 py-0.5">{lunchFoods.length}</span>
+      </button>
+    </div>
+
+    {/* ===== TIFFIN PANEL ===== */}
+    <div id="panel-tiffin">
+      <div class="flex items-center justify-between mb-4">
+        <p class="text-xs text-stone">All combos rotate before repeating. Same main OK if side differs.</p>
+        <button id="add-tiffin-btn" class="rounded-lg bg-[#E8A317] text-white text-xs font-bold px-4 py-2 cursor-pointer hover:opacity-90 shadow-sm">+ New Combo</button>
+      </div>
+
+      {/* Combo Cards grouped by main */}
+      <div id="tiffin-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tiffinGroups.map(([mainId, items]) => (
+          <div class="bg-white rounded-2xl border border-mist overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            {/* Hero main */}
+            <div class="relative h-32 bg-gradient-to-b from-[#E8A317]/10 to-white">
+              <img src={`${imgBase}images/recipes/${mainId}.jpg`} alt="" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('flex','items-center','justify-center');this.outerHTML='<span class=&quot;text-4xl&quot;>🍽️</span>'" />
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-3 pb-2 pt-6">
+                <p class="text-white font-bold text-sm drop-shadow">{recipeMap[mainId]?.name_en || mainId}</p>
+                <p class="text-white/70 text-[10px] font-tamil">{recipeMap[mainId]?.name_ta || ''}</p>
+              </div>
+            </div>
+            {/* Side variations */}
+            <div class="p-3 space-y-1.5">
+              <p class="text-[10px] text-smoke uppercase font-bold tracking-wider mb-1">Sides ({items.length})</p>
+              {items.map((f) => (
+                <div class="combo-row group flex items-center gap-2 rounded-lg bg-sand/50 px-2.5 py-1.5 hover:bg-[#E8A317]/10 cursor-pointer transition-colors" data-id={f.id}>
+                  {f.sides.length ? f.sides.map((s) => (
+                    <img src={`${imgBase}images/recipes/${s}.jpg`} alt="" class="w-7 h-7 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'" />
+                  )) : <span class="w-7 h-7 rounded-md bg-mist flex items-center justify-center text-[10px] text-smoke">—</span>}
+                  <span class="text-xs text-bark flex-1 truncate">{f.sides.length ? f.sides.map(s => recipeMap[s]?.name_en || s).join(' + ') : 'No side'}</span>
+                  <button class="delete-combo opacity-0 group-hover:opacity-100 text-clay hover:text-red-500 text-sm cursor-pointer transition-opacity" title="Remove">×</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Export moved to modal popup */}
+    </div>
+
+    {/* ===== LUNCH PANEL ===== */}
+    <div id="panel-lunch" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <p class="text-xs text-stone">Main can't repeat within rotation. Exact combo can't repeat until all done.</p>
+        <button id="add-lunch-btn" class="rounded-lg bg-[#2D7A3A] text-white text-xs font-bold px-4 py-2 cursor-pointer hover:opacity-90 shadow-sm">+ New Combo</button>
+      </div>
+
+      {/* Combo Cards grouped by main */}
+      <div id="lunch-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {lunchGroups.map(([mainId, items]) => (
+          <div class="bg-white rounded-2xl border border-mist overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            {/* Hero main */}
+            <div class="relative h-32 bg-gradient-to-b from-[#2D7A3A]/10 to-white">
+              <img src={`${imgBase}images/recipes/${mainId}.jpg`} alt="" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('flex','items-center','justify-center');this.outerHTML='<svg class=&quot;w-10 h-10 text-mist&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot; viewBox=&quot;0 0 24 24&quot;><circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;9&quot;/><path d=&quot;M8 12h8&quot;/></svg>'" />
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-3 pb-2 pt-6">
+                <p class="text-white font-bold text-sm drop-shadow">{recipeMap[mainId]?.name_en || mainId}</p>
+                <p class="text-white/70 text-[10px] font-tamil">{recipeMap[mainId]?.name_ta || ''}</p>
+              </div>
+            </div>
+            {/* Side variations */}
+            <div class="p-3 space-y-1.5">
+              <p class="text-[10px] text-smoke uppercase font-bold tracking-wider mb-1">Sides ({items.length})</p>
+              {items.map((f) => (
+                <div class="combo-row group flex items-center gap-2 rounded-lg bg-sand/50 px-2.5 py-1.5 hover:bg-[#2D7A3A]/10 cursor-pointer transition-colors" data-id={f.id}>
+                  {f.sides.length ? f.sides.map((s) => (
+                    <img src={`${imgBase}images/recipes/${s}.jpg`} alt="" class="w-7 h-7 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'" />
+                  )) : <span class="w-7 h-7 rounded-md bg-mist flex items-center justify-center text-[10px] text-smoke">—</span>}
+                  <span class="text-xs text-bark flex-1 truncate">{f.sides.length ? f.sides.map(s => recipeMap[s]?.name_en || s).join(' + ') : 'No side'}</span>
+                  <button class="delete-combo opacity-0 group-hover:opacity-100 text-clay hover:text-red-500 text-sm cursor-pointer transition-opacity" title="Remove">×</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Export moved to modal popup */}
+    </div>
+
+  </div>
+
+  {/* ===== MODAL POPUP for Add/Edit Combo ===== */}
+  <div id="combo-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div id="combo-modal-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto">
+      <div id="combo-modal-header" class="sticky top-0 bg-white rounded-t-2xl border-b border-mist px-5 py-3 flex items-center justify-between z-10">
+        <div>
+          <h3 id="combo-modal-title" class="text-sm font-bold text-bark">New Combo</h3>
+          <span id="combo-modal-status" class="text-[10px] text-smoke"></span>
+        </div>
+        <button id="combo-modal-close" class="text-stone hover:text-bark text-xl cursor-pointer px-2">✕</button>
+      </div>
+      <div class="p-5 space-y-4">
+        {/* Main selection */}
+        <div>
+          <label class="text-xs font-bold text-bark uppercase tracking-wide mb-2 block">Main</label>
+          <input id="modal-main-search" type="text" placeholder="Search mains..." class="w-full rounded-lg border border-mist px-3 py-1.5 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-[#E8A317]/40" />
+          <div id="modal-main-grid" class="grid grid-cols-4 gap-1.5 max-h-48 overflow-y-auto"></div>
+        </div>
+        {/* Side selection */}
+        <div>
+          <label id="modal-side-label" class="text-xs font-bold text-bark uppercase tracking-wide mb-2 block">Side <span class="font-normal text-smoke">(optional)</span></label>
+          <input id="modal-side-search" type="text" placeholder="Search sides..." class="w-full rounded-lg border border-mist px-3 py-1.5 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-[#E8A317]/40" />
+          <div id="modal-side-grid" class="grid grid-cols-4 gap-1.5 max-h-48 overflow-y-auto"></div>
+        </div>
+      </div>
+      <div class="sticky bottom-0 bg-white rounded-b-2xl border-t border-mist px-5 py-3 flex items-center gap-2">
+        <button id="combo-modal-save" class="rounded-lg bg-[#E8A317] text-white text-xs font-bold px-5 py-2.5 cursor-pointer flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg> Save</button>
+        <button id="combo-modal-cancel" class="rounded-lg bg-white border border-mist text-stone text-xs font-bold px-5 py-2.5 cursor-pointer">Cancel</button>
+        <button id="combo-modal-export" class="ml-auto rounded-lg bg-bark text-white text-xs font-bold px-4 py-2 cursor-pointer flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-1M16 3h5v5M21 3l-9 9"/></svg> Export</button>
+        <span id="combo-modal-export-msg" class="text-xs text-[#2D7A3A] hidden">✓ Copied!</span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ foodsData: foods, recipesData: recipes }}>
+  window.__FOODS = foodsData;
+  window.__RECIPES = recipesData;
+</script>
+
+<script>
+  const recipeMap = {};
+  window.__RECIPES.forEach(r => { recipeMap[r.id] = r; });
+
+  let tiffinCombos = window.__FOODS.filter(f => f.category === 'tiffin');
+  let lunchCombos = window.__FOODS.filter(f => f.category === 'lunch');
+
+  // --- TAB SWITCHING ---
+  const tabTiffin = document.getElementById('tab-tiffin');
+  const tabLunch = document.getElementById('tab-lunch');
+  const panelTiffin = document.getElementById('panel-tiffin');
+  const panelLunch = document.getElementById('panel-lunch');
+
+  tabTiffin.addEventListener('click', () => {
+    tabTiffin.classList.add('border-[#E8A317]', 'text-[#E8A317]');
+    tabTiffin.classList.remove('border-transparent', 'text-stone');
+    tabLunch.classList.remove('border-[#2D7A3A]', 'text-[#2D7A3A]');
+    tabLunch.classList.add('border-transparent', 'text-stone');
+    panelTiffin.classList.remove('hidden');
+    panelLunch.classList.add('hidden');
+  });
+  tabLunch.addEventListener('click', () => {
+    tabLunch.classList.add('border-[#2D7A3A]', 'text-[#2D7A3A]');
+    tabLunch.classList.remove('border-transparent', 'text-stone');
+    tabTiffin.classList.remove('border-[#E8A317]', 'text-[#E8A317]');
+    tabTiffin.classList.add('border-transparent', 'text-stone');
+    panelLunch.classList.remove('hidden');
+    panelTiffin.classList.add('hidden');
+  });
+
+  // --- SHARED MODAL SETUP ---
+  const modal = document.getElementById('combo-modal');
+  const modalBackdrop = document.getElementById('combo-modal-backdrop');
+  const modalTitle = document.getElementById('combo-modal-title');
+  const modalStatus = document.getElementById('combo-modal-status');
+  const modalMainGrid = document.getElementById('modal-main-grid');
+  const modalSideGrid = document.getElementById('modal-side-grid');
+  const modalMainSearch = document.getElementById('modal-main-search');
+  const modalSideSearch = document.getElementById('modal-side-search');
+  const modalSideLabel = document.getElementById('modal-side-label');
+  const modalSave = document.getElementById('combo-modal-save');
+  const modalCancel = document.getElementById('combo-modal-cancel');
+  const modalClose = document.getElementById('combo-modal-close');
+
+  let currentSaveHandler = null;
+  let currentExportHandler = null;
+  const modalExport = document.getElementById('combo-modal-export');
+  const modalExportMsg = document.getElementById('combo-modal-export-msg');
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (currentSaveHandler) {
+      modalSave.removeEventListener('click', currentSaveHandler);
+      currentSaveHandler = null;
+    }
+    if (currentExportHandler) {
+      modalExport.removeEventListener('click', currentExportHandler);
+      currentExportHandler = null;
+    }
+  }
+  modalCancel.addEventListener('click', closeModal);
+  modalClose.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', closeModal);
+
+  function filterGrid(grid, query) {
+    grid.querySelectorAll('button').forEach(btn => {
+      const name = (recipeMap[btn.dataset.value]?.name_en || '').toLowerCase();
+      btn.style.display = name.includes(query) ? '' : 'none';
+    });
+  }
+  modalMainSearch.addEventListener('input', () => filterGrid(modalMainGrid, modalMainSearch.value.toLowerCase().trim()));
+  modalSideSearch.addEventListener('input', () => filterGrid(modalSideGrid, modalSideSearch.value.toLowerCase().trim()));
+
+  // Get imgBase from the page
+  const imgBase = document.querySelector('img')?.src.match(/^(.*\/images\/)/)?.[0]?.replace('images/', '') || '/tamilcookbook/';
+
+  // Build recipe arrays
+  const tiffinMainRecipes = window.__RECIPES.filter(r => r.category === 'tiffin/mains');
+  const tiffinSideRecipes = window.__RECIPES.filter(r => r.category === 'tiffin/sides' || r.category === 'accompaniments/items');
+  const lunchMainRecipes = window.__RECIPES.filter(r => r.category === 'lunch/mains');
+  const lunchSideRecipes = window.__RECIPES.filter(r => r.category === 'lunch/sides' || r.category === 'accompaniments/items');
+
+  // --- GENERIC EDITOR LOGIC ---
+  function createEditor(config) {
+    const { listEl, getCombos, setCombos, color, mainRecipes, sideRecipes, addBtn, multiSide } = config;
+
+    let editingId = null;
+    let selectedMain = '';
+    let selectedSides = [];
+
+    function getName(id) { return recipeMap[id]?.name_en || id; }
+    function getNameTa(id) { return recipeMap[id]?.name_ta || ''; }
+
+    function populateGrids() {
+      modalMainGrid.innerHTML = mainRecipes.map(r => `
+        <button type="button" data-value="${r.id}" class="pick-main relative flex flex-col items-center gap-0.5 rounded-lg border border-mist bg-white p-1.5 cursor-pointer hover:border-${color} transition-colors">
+          <img src="${imgBase}images/recipes/${r.id}.jpg" alt="" class="w-10 h-10 rounded-md object-cover" onerror="this.style.display='none'" />
+          <span class="text-[9px] text-bark font-semibold leading-tight text-center line-clamp-2 w-full">${r.name_en}</span>
+          <span class="text-[8px] text-smoke leading-tight text-center w-full">${r.name_ta || ''}</span>
+        </button>
+      `).join('');
+
+      modalSideGrid.innerHTML = sideRecipes.map(r => `
+        <button type="button" data-value="${r.id}" class="pick-side relative flex flex-col items-center gap-0.5 rounded-lg border border-mist bg-white p-1.5 cursor-pointer hover:border-${color} transition-colors">
+          <img src="${imgBase}images/recipes/${r.id}.jpg" alt="" class="w-10 h-10 rounded-md object-cover" onerror="this.style.display='none'" />
+          <span class="text-[9px] text-bark font-semibold leading-tight text-center line-clamp-2 w-full">${r.name_en}</span>
+          <span class="text-[8px] text-smoke leading-tight text-center w-full">${r.name_ta || ''}</span>
+        </button>
+      `).join('');
+
+      modalSideLabel.innerHTML = multiSide
+        ? 'Sides <span class="font-normal text-smoke">(optional, multi-select)</span>'
+        : 'Side <span class="font-normal text-smoke">(optional)</span>';
+
+      // Bind main clicks
+      modalMainGrid.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedMain = btn.dataset.value;
+          highlightSelections();
+        });
+      });
+
+      // Bind side clicks
+      modalSideGrid.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (multiSide) {
+            if (selectedSides.includes(btn.dataset.value)) {
+              selectedSides = selectedSides.filter(s => s !== btn.dataset.value);
+            } else {
+              selectedSides.push(btn.dataset.value);
+            }
+          } else {
+            if (selectedSides[0] === btn.dataset.value) {
+              selectedSides = [];
+            } else {
+              selectedSides = [btn.dataset.value];
+            }
+          }
+          highlightSelections();
+        });
+      });
+    }
+
+    function highlightSelections() {
+      modalMainGrid.querySelectorAll('button').forEach(btn => {
+        btn.classList.toggle('ring-2', btn.dataset.value === selectedMain);
+        btn.classList.toggle(`ring-${color}`, btn.dataset.value === selectedMain);
+        btn.classList.toggle(`bg-${color}/10`, btn.dataset.value === selectedMain);
+      });
+      modalSideGrid.querySelectorAll('button').forEach(btn => {
+        const isSel = selectedSides.includes(btn.dataset.value);
+        btn.classList.toggle('ring-2', isSel);
+        btn.classList.toggle(`ring-${color}`, isSel);
+        btn.classList.toggle(`bg-${color}/10`, isSel);
+      });
+    }
+
+    function openEditor(combo = null) {
+      populateGrids();
+      modalMainSearch.value = '';
+      modalSideSearch.value = '';
+      if (combo) {
+        editingId = combo.id;
+        selectedMain = combo.main;
+        selectedSides = [...combo.sides];
+        modalTitle.textContent = 'Edit Combo';
+        modalStatus.textContent = getName(combo.main);
+      } else {
+        editingId = null;
+        selectedMain = '';
+        selectedSides = [];
+        modalTitle.textContent = 'New Combo';
+        modalStatus.textContent = '';
+      }
+      modalSave.className = `rounded-lg bg-${color} text-white text-xs font-bold px-5 py-2.5 cursor-pointer`;
+      highlightSelections();
+
+      // Attach save handler
+      if (currentSaveHandler) modalSave.removeEventListener('click', currentSaveHandler);
+      currentSaveHandler = () => {
+        if (!selectedMain) { alert('Select a main!'); return; }
+        const id = selectedSides.length ? [selectedMain, ...selectedSides.sort()].join('-') : selectedMain;
+        const name = [getName(selectedMain), ...selectedSides.map(s => getName(s))].join(' + ');
+        const newCombo = { id, category: config.category, name_en: name, main: selectedMain, sides: selectedSides };
+
+        const current = getCombos();
+        if (editingId) {
+          const dupe = current.find(f => f.id === id && f.id !== editingId);
+          if (dupe) { alert('This combo already exists!'); return; }
+          setCombos(current.map(f => f.id === editingId ? newCombo : f));
+        } else {
+          if (current.find(f => f.id === id)) { alert('This combo already exists!'); return; }
+          setCombos([...current, newCombo]);
+        }
+        renderList();
+        closeModal();
+      };
+      modalSave.addEventListener('click', currentSaveHandler);
+
+      // Attach export handler
+      if (currentExportHandler) modalExport.removeEventListener('click', currentExportHandler);
+      currentExportHandler = () => {
+        const items = getCombos();
+        const lines = items.map(f => {
+          const sidesStr = f.sides.map(s => `'${s}'`).join(', ');
+          return `  { id: '${f.id}', main: '${f.main}', sides: [${sidesStr}] },`;
+        });
+        const code = `export default [\n${lines.join('\n')}\n];\n`;
+        navigator.clipboard?.writeText(code);
+        modalExportMsg.classList.remove('hidden');
+        setTimeout(() => modalExportMsg.classList.add('hidden'), 2000);
+      };
+      modalExport.addEventListener('click', currentExportHandler);
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function renderList() {
+      const items = getCombos();
+
+      // Group by main
+      const groups = {};
+      items.forEach(f => {
+        if (!groups[f.main]) groups[f.main] = [];
+        groups[f.main].push(f);
+      });
+
+      let html = '';
+      Object.keys(groups).forEach(mainId => {
+        const groupItems = groups[mainId];
+        html += `
+          <div class="bg-white rounded-2xl border border-mist overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div class="relative h-32 bg-gradient-to-b from-${color}/10 to-white">
+              <img src="${imgBase}images/recipes/${mainId}.jpg" alt="" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('flex','items-center','justify-center');this.outerHTML='<svg class=\\'w-10 h-10 text-mist\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' viewBox=\\'0 0 24 24\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'9\\'/><path d=\\'M8 12h8\\'/></svg>'" />
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-3 pb-2 pt-6">
+                <p class="text-white font-bold text-sm drop-shadow">${getName(mainId)}</p>
+                <p class="text-white/70 text-[10px]">${getNameTa(mainId)}</p>
+              </div>
+            </div>
+            <div class="p-3 space-y-1.5">
+              <p class="text-[10px] text-smoke uppercase font-bold tracking-wider mb-1">Sides (${groupItems.length})</p>
+              ${groupItems.map(f => `
+                <div class="combo-row group flex items-center gap-2 rounded-lg bg-sand/50 px-2.5 py-1.5 hover:bg-${color}/10 cursor-pointer transition-colors" data-id="${f.id}">
+                  ${f.sides.length ? f.sides.map(s => `<img src="${imgBase}images/recipes/${s}.jpg" alt="" class="w-7 h-7 rounded-md object-cover flex-shrink-0" onerror="this.style.display='none'" />`).join('') : '<span class="w-7 h-7 rounded-md bg-mist flex items-center justify-center text-[10px] text-smoke">—</span>'}
+                  <span class="text-xs text-bark flex-1 truncate">${f.sides.length ? f.sides.map(s => getName(s)).join(' + ') : 'No side'}</span>
+                  <button class="delete-combo opacity-0 group-hover:opacity-100 text-clay hover:text-red-500 text-sm cursor-pointer transition-opacity" title="Remove">&times;</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      listEl.innerHTML = html;
+
+      // Click row to edit
+      listEl.querySelectorAll('.combo-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('.delete-combo')) return;
+          const combo = getCombos().find(f => f.id === row.dataset.id);
+          if (!combo) return;
+          openEditor(combo);
+        });
+        row.querySelector('.delete-combo').addEventListener('click', (e) => {
+          e.stopPropagation();
+          setCombos(getCombos().filter(f => f.id !== row.dataset.id));
+          renderList();
+        });
+      });
+    }
+
+    // Add button
+    document.getElementById(addBtn).addEventListener('click', () => openEditor());
+
+    renderList();
+  }
+
+  // --- INIT TIFFIN EDITOR ---
+  createEditor({
+    listEl: document.getElementById('tiffin-list'),
+    category: 'tiffin',
+    getCombos: () => tiffinCombos,
+    setCombos: (c) => { tiffinCombos = c; },
+    color: '[#E8A317]',
+    mainRecipes: tiffinMainRecipes,
+    sideRecipes: tiffinSideRecipes,
+    addBtn: 'add-tiffin-btn',
+    multiSide: false,
+  });
+
+  // --- INIT LUNCH EDITOR ---
+  createEditor({
+    listEl: document.getElementById('lunch-list'),
+    category: 'lunch',
+    getCombos: () => lunchCombos,
+    setCombos: (c) => { lunchCombos = c; },
+    color: '[#2D7A3A]',
+    mainRecipes: lunchMainRecipes,
+    sideRecipes: lunchSideRecipes,
+    addBtn: 'add-lunch-btn',
+    multiSide: true,
+  });
+</script>

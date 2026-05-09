@@ -1,0 +1,27 @@
+export default {
+  id: "carrot-poriyal",
+  name_en: "Carrot Poriyal",
+  name_ta: "கேரட் பொரியல்",
+  category: "lunch/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "carrot", name_en: "Carrot", quantity: 3, unit: "nos", shop_category: "vegetable" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 2, unit: "tbsp", shop_category: "vegetable" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 1, unit: "tsp", shop_category: "grains" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "green-chilli", name_en: "Green Chilli", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "oil", name_en: "Oil", quantity: 1, unit: "tbsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Peel and finely chop carrots.", text_ta: "கேரட்டை தோல் சீவி பொடியாக நறுக்கவும்." },
+    { order: 2, text_en: "Heat oil. Add mustard seeds, urad dal, green chillies, and curry leaves.", text_ta: "எண்ணெயில் கடுகு, உளுத்தம் பருப்பு, பச்சை மிளகாய், கறிவேப்பிலை தாளிக்கவும்." },
+    { order: 3, text_en: "Add carrots, salt, and sprinkle water. Cover and cook for 5-7 minutes until tender.", text_ta: "கேரட், உப்பு, சிறிது தண்ணீர் தெளித்து மூடி 5-7 நிமிடம் வேக வைக்கவும்." },
+    { order: 4, text_en: "Add grated coconut and mix well.", text_ta: "தேங்காய் துருவல் சேர்த்து கலக்கவும்." },
+  ],
+  tags: ["everyday", "quick", "healthy"],
+};

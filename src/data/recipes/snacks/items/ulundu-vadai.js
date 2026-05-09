@@ -1,0 +1,27 @@
+export default {
+  id: "ulundu-vadai",
+  name_en: "Ulundu Vadai",
+  name_ta: "உளுந்து வடை",
+  category: "snacks/items",
+  veg: true,
+  complexity: 2,
+  servings: 4,
+  prep_time_mins: 240,
+  cook_time_mins: 20,
+  ingredients: [
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "onion", name_en: "Onion", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "green-chilli", name_en: "Green Chilli", quantity: 3, unit: "nos", shop_category: "vegetable" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "ginger", name_en: "Ginger", quantity: 1, unit: "inch", shop_category: "vegetable" },
+    { item: "black-pepper", name_en: "Whole Black Pepper", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil", quantity: 2, unit: "cup", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak urad dal for 3-4 hours. Grind to a thick fluffy batter without adding much water.", text_ta: "உளுத்தம் பருப்பை 3-4 மணி நேரம் ஊற வைத்து தண்ணீர் அதிகம் சேர்க்காமல் பஞ்சு போல் அரைக்கவும்." },
+    { order: 2, text_en: "Add chopped onion, green chilli, ginger, curry leaves, pepper, and salt to the batter.", text_ta: "மாவில் வெங்காயம், பச்சை மிளகாய், இஞ்சி, கறிவேப்பிலை, மிளகு, உப்பு சேர்க்கவும்." },
+    { order: 3, text_en: "Wet hands, take a portion of batter, shape into a disc with a hole in the center.", text_ta: "கையை நனைத்து மாவை எடுத்து நடுவில் துளையுடன் வட்டமாக தட்டவும்." },
+    { order: 4, text_en: "Deep fry in medium-hot oil until golden brown on both sides.", text_ta: "மிதமான சூடான எண்ணெயில் இருபுறமும் பொன்னிறமாக பொரிக்கவும்." },
+  ],
+  tags: ["traditional", "festive", "protein"],
+};

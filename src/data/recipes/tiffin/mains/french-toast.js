@@ -1,0 +1,25 @@
+export default {
+  id: "french-toast",
+  name_en: "French Toast",
+  name_ta: "ஃப்ரெஞ்ச் டோஸ்ட்",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 1,
+  servings: 2,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "bread", name_en: "Bread Slices", quantity: 4, unit: "nos", shop_category: "grains" },
+    { item: "egg", name_en: "Egg", quantity: 2, unit: "nos", shop_category: "dairy" },
+    { item: "milk", name_en: "Milk", quantity: 0.25, unit: "cup", shop_category: "dairy" },
+    { item: "sugar", name_en: "Sugar", quantity: 1, unit: "tbsp", shop_category: "other" },
+    { item: "cinnamon", name_en: "Cinnamon Powder", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "butter", name_en: "Butter", quantity: 1, unit: "tbsp", shop_category: "dairy" },
+  ],
+  steps: [
+    { order: 1, text_en: "Beat eggs with milk, sugar, and cinnamon.", text_ta: "முட்டை, பால், சர்க்கரை, பட்டைத்தூள் கலந்து அடிக்கவும்." },
+    { order: 2, text_en: "Dip bread slices in the egg mixture, coating both sides.", text_ta: "பிரெட்டை முட்டைக் கலவையில் இருபுறமும் நனைக்கவும்." },
+    { order: 3, text_en: "Cook on a buttered pan until golden brown on both sides.", text_ta: "வெண்ணெய் தடவிய கடாயில் இருபுறமும் பொன்னிறமாக சுடவும்." },
+  ],
+  tags: ["quick", "kids-friendly", "sweet"],
+};

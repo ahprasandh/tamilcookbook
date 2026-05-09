@@ -1,0 +1,25 @@
+export default {
+  id: "american-sweet-corn",
+  name_en: "American Sweet Corn",
+  name_ta: "அமெரிக்கன் ஸ்வீட் கார்ன்",
+  category: "snacks/items",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "sweet-corn", name_en: "Sweet Corn Kernels", quantity: 2, unit: "cup", shop_category: "vegetables" },
+    { item: "butter", name_en: "Butter", quantity: 2, unit: "tbsp", shop_category: "dairy" },
+    { item: "chilli-powder", name_en: "Red Chilli Powder", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "chaat-masala", name_en: "Chaat Masala", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "lemon", name_en: "Lemon Juice", quantity: 1, unit: "tbsp", shop_category: "vegetables" },
+  ],
+  steps: [
+    { order: 1, text_en: "Boil or pressure cook sweet corn kernels until tender. Drain.", text_ta: "சோளத்தை வேகவைத்து தண்ணீரை வடிகட்டவும்." },
+    { order: 2, text_en: "Heat butter in a pan, add cooked corn and toss well.", text_ta: "வெண்ணெயில் வேகவைத்த சோளத்தை சேர்த்து கிளறவும்." },
+    { order: 3, text_en: "Add chilli powder, chaat masala, salt, and lemon juice. Mix and serve hot.", text_ta: "மிளகாய்த்தூள், சாட் மசாலா, உப்பு, எலுமிச்சை சாறு சேர்த்து பரிமாறவும்." },
+  ],
+  photos: [],
+  tags: ["snack", "quick", "evening"],
+};

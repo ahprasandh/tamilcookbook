@@ -1,0 +1,36 @@
+---
+interface Props {
+  category: string;
+  size?: 'sm' | 'md';
+}
+
+const { category, size = 'md' } = Astro.props;
+
+const colorMap: Record<string, string> = {
+  'tiffin/mains': '#E8A317',
+  'tiffin/sides': '#8C7B6B',
+  'lunch/mains': '#C0392B',
+  'lunch/sides': '#2D7A3A',
+  'snacks/items': '#D35400',
+  'desserts/items': '#8E44AD',
+};
+
+const labelMap: Record<string, string> = {
+  'tiffin/mains': 'Tiffin Main',
+  'tiffin/sides': 'Tiffin Side',
+  'lunch/mains': 'Lunch Main',
+  'lunch/sides': 'Lunch Side',
+  'snacks/items': 'Snack',
+  'desserts/items': 'Dessert',
+};
+
+const color = colorMap[category] || '#8C7B6B';
+const label = labelMap[category] || category;
+const sizeClass = size === 'sm' ? 'text-[10px] px-1.5 py-0.5' : 'text-[11px] px-2 py-[3px]';
+---
+<span
+  class:list={['inline-block rounded-full font-semibold', sizeClass]}
+  style={`color: ${color}; background: ${color}26;`}
+>
+  {label}
+</span>

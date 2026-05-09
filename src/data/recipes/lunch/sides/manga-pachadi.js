@@ -1,0 +1,28 @@
+export default {
+  id: "manga-pachadi",
+  name_en: "Manga Pachadi",
+  name_ta: "மாங்காய் பச்சடி",
+  category: "lunch/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "raw-mango", name_en: "Raw Mango (diced)", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "jaggery", name_en: "Jaggery", quantity: 3, unit: "tbsp", shop_category: "other" },
+    { item: "red-chilli-powder", name_en: "Red Chilli Powder", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "mustard", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 1, unit: "nos", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "turmeric", name_en: "Turmeric", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Cook diced mango with turmeric, salt, and 1 cup water until soft (5-7 mins).", text_ta: "மாங்காய் துண்டுகளை மஞ்சள், உப்பு, 1 கப் தண்ணீரில் 5-7 நிமிடம் வேகவிடவும்." },
+    { order: 2, text_en: "Add jaggery and red chilli powder. Stir until jaggery dissolves and thickens slightly.", text_ta: "வெல்லம், மிளகாய்த்தூள் சேர்த்து வெல்லம் கரையும் வரை கிளறவும்." },
+    { order: 3, text_en: "Heat oil, splutter mustard, red chilli, curry leaves. Pour over pachadi.", text_ta: "எண்ணெயில் கடுகு, காய்ந்த மிளகாய், கறிவேப்பிலை தாளித்து பச்சடியில் சேர்க்கவும்." },
+  ],
+  tags: ["sweet-sour", "festival", "summer"],
+};

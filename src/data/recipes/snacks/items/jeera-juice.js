@@ -1,0 +1,25 @@
+export default {
+  id: "jeera-juice",
+  name_en: "Jeera Juice",
+  name_ta: "சீரக தண்ணீர்",
+  category: "desserts/items",
+  veg: true,
+  complexity: 1,
+  servings: 2,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "cumin", name_en: "Cumin Seeds", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "lemon", name_en: "Lemon", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "mint", name_en: "Mint Leaves", quantity: 5, unit: "nos", shop_category: "vegetable" },
+    { item: "jaggery", name_en: "Jaggery", quantity: 1, unit: "tbsp", shop_category: "other" },
+    { item: "black-salt", name_en: "Black Salt", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "water", name_en: "Water", quantity: 2, unit: "cup", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Dry roast cumin seeds until aromatic. Let cool. Grind to powder.", text_ta: "சீரகத்தை வறுத்து ஆற வைத்து பொடிக்கவும்." },
+    { order: 2, text_en: "Mix cumin powder, jaggery, black salt, lemon juice in cold water. Stir well.", text_ta: "சீரகப்பொடி, வெல்லம், கருப்பு உப்பு, எலுமிச்சை சாறு தண்ணீரில் கலக்கவும்." },
+    { order: 3, text_en: "Add mint leaves and serve chilled.", text_ta: "புதினா சேர்த்து குளிர்ச்சியாக பரிமாறவும்." },
+  ],
+  tags: ["beverage", "digestive", "summer"],
+};

@@ -1,0 +1,28 @@
+export default {
+  id: "black-channa-sundal",
+  name_en: "Black Channa Sundal",
+  name_ta: "கருப்பு சுண்டல்",
+  category: "snacks/items",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 480,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "black-chana", name_en: "Black Chana (Kala Chana)", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 2, unit: "tbsp", shop_category: "vegetable" },
+    { item: "mustard", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.5, unit: "tsp", shop_category: "grains" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 2, unit: "nos", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak black chana overnight. Pressure cook for 5 whistles until soft.", text_ta: "கருப்பு கடலையை இரவு முழுவதும் ஊற வைத்து 5 விசில் வேக வைக்கவும்." },
+    { order: 2, text_en: "Heat oil, splutter mustard, urad dal, red chilli, curry leaves, asafoetida.", text_ta: "எண்ணெயில் கடுகு, உளுத்தம் பருப்பு, காய்ந்த மிளகாய், கறிவேப்பிலை, பெருங்காயம் தாளிக்கவும்." },
+    { order: 3, text_en: "Add cooked chana and salt. Toss well. Garnish with grated coconut.", text_ta: "வெந்த கடலை, உப்பு சேர்த்து நன்கு கிளறி தேங்காய் துருவல் தூவவும்." },
+  ],
+  tags: ["evening-snack", "healthy", "festival"],
+};

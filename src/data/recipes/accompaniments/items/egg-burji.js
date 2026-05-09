@@ -1,0 +1,28 @@
+export default {
+  id: "egg-burji",
+  name_en: "Egg Burji",
+  name_ta: "முட்டை புர்ஜி",
+  category: "accompaniments/items",
+  veg: false,
+  complexity: 1,
+  servings: 2,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "egg", name_en: "Eggs", quantity: 4, unit: "nos", shop_category: "other" },
+    { item: "onion", name_en: "Onion (finely chopped)", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "green-chilli", name_en: "Green Chilli (chopped)", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "tomato", name_en: "Tomato (chopped)", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "turmeric", name_en: "Turmeric", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "red-chilli-powder", name_en: "Red Chilli Powder", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "coriander-leaves", name_en: "Coriander Leaves", quantity: 1, unit: "tbsp", shop_category: "vegetable" },
+    { item: "oil", name_en: "Oil", quantity: 1, unit: "tbsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Heat oil, sauté onion and green chilli until soft. Add tomato, cook 1 min.", text_ta: "எண்ணெயில் வெங்காயம், பச்சை மிளகாய் வதக்கி தக்காளி சேர்த்து 1 நிமிடம் வேகவிடவும்." },
+    { order: 2, text_en: "Crack eggs directly into pan. Add turmeric, chilli powder, salt. Scramble on high heat.", text_ta: "முட்டையை உடைத்து ஊற்றி மஞ்சள், மிளகாய்த்தூள், உப்பு சேர்த்து அதிக தீயில் கிளறவும்." },
+    { order: 3, text_en: "Cook until dry and crumbly. Garnish with coriander.", text_ta: "வறண்டு வரும் வரை கிளறி கொத்தமல்லி தூவி பரிமாறவும்." },
+  ],
+  tags: ["quick", "spicy"],
+};

@@ -1,0 +1,27 @@
+export default {
+  id: "vazhaikai-bajji",
+  name_en: "Vazhaikai Bajji",
+  name_ta: "வாழைக்காய் பஜ்ஜி",
+  category: "snacks/items",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 10,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "raw-banana", name_en: "Raw Banana (Vazhaikkai)", quantity: 2, unit: "nos", shop_category: "vegetable" },
+    { item: "besan", name_en: "Besan (Gram Flour)", quantity: 0.75, unit: "cup", shop_category: "grains" },
+    { item: "rice-flour", name_en: "Rice Flour", quantity: 2, unit: "tbsp", shop_category: "grains" },
+    { item: "red-chilli-powder", name_en: "Red Chilli Powder", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "turmeric", name_en: "Turmeric", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil (for deep frying)", quantity: 2, unit: "cup", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Peel raw bananas and slice into thin rounds. Soak in salted water.", text_ta: "வாழைக்காயை தோல் உரித்து மெல்லிய வட்டங்களாக நறுக்கி உப்பு நீரில் போடவும்." },
+    { order: 2, text_en: "Mix besan, rice flour, chilli powder, turmeric, asafoetida, salt with water into a thick batter.", text_ta: "கடலை மாவு, அரிசி மாவு, மிளகாய்த்தூள், மஞ்சள், பெருங்காயம், உப்பு சேர்த்து தண்ணீர் விட்டு கெட்டியான மாவு கரைக்கவும்." },
+    { order: 3, text_en: "Drain banana slices, dip in batter, and deep fry until golden and crispy.", text_ta: "வாழைக்காய் துண்டுகளை மாவில் தோய்த்து பொன்னிறமாக மொறுமொறுப்பாக பொரிக்கவும்." },
+  ],
+  tags: ["evening-snack", "crispy", "rainy-day"],
+};

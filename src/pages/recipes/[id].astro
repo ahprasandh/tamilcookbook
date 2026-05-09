@@ -1,0 +1,351 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VegDot from '../../components/VegDot.astro';
+import ComplexityDots from '../../components/ComplexityDots.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
+import recipes, { categories } from '../../data/recipes.js';
+
+const catLabels = {
+  'tiffin/mains': 'Tiffin Mains', 'tiffin/sides': 'Tiffin Sides',
+  'lunch/mains': 'Lunch Mains', 'lunch/sides': 'Lunch Sides',
+  'accompaniments/items': 'Accompaniments',
+  'snacks/items': 'Snacks', 'desserts/items': 'Desserts',
+};
+
+export function getStaticPaths() {
+  return recipes.map((recipe) => ({
+    params: { id: recipe.id },
+    props: { recipe },
+  }));
+}
+
+const { recipe } = Astro.props;
+const totalTime = recipe.prep_time_mins + recipe.cook_time_mins;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<BaseLayout title={`${recipe.name_en} — Tamil Cookbook`} description={`Learn to make ${recipe.name_en} (${recipe.name_ta}). ${totalTime} minutes, serves ${recipe.servings}.`} active="recipes">
+  <div class="max-w-4xl mx-auto px-4 md:px-8 py-6">
+    {/* Breadcrumb */}
+    <nav class="flex items-center justify-between text-xs text-smoke mb-4">
+      <div>
+        <a href={`${base}recipes/`} class="text-turmeric hover:underline no-underline">Recipes</a>
+        <span class="mx-1">›</span>
+        <span>{recipe.name_en}</span>
+      </div>
+      <button id="edit-btn" class="rounded-md bg-sand text-bark text-xs font-semibold px-3 py-1.5 cursor-pointer hover:bg-mist">Edit</button>
+    </nav>
+
+    {/* Hero Section */}
+    <div class="grid md:grid-cols-2 gap-6 md:gap-8 mb-8">
+      {/* Image */}
+      <div class="rounded-xl overflow-hidden h-52 md:h-80 flex items-center justify-center" style="background-color: #F5F0E8;">
+        <img src={`${base}images/recipes/${recipe.id}.jpg`} alt={recipe.name_en} class="w-full h-full object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display=''" />
+        <span class="text-6xl opacity-15" style="display:none"></span>
+      </div>
+
+      {/* Info */}
+      <div>
+        <div class="flex items-center gap-2.5 mb-2">
+          <VegDot veg={recipe.veg} size="lg" />
+          <CategoryBadge category={recipe.category} />
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-bark mb-1">{recipe.name_en}</h1>
+        <p class="font-tamil text-base md:text-lg text-stone mb-4">{recipe.name_ta}</p>
+
+        {/* Stats */}
+        <div class="flex gap-6 mb-6">
+          <div>
+            <p class="text-[11px] text-smoke uppercase font-bold tracking-wider">Prep</p>
+            <p class="text-sm font-bold text-bark">{recipe.prep_time_mins} min</p>
+          </div>
+          <div>
+            <p class="text-[11px] text-smoke uppercase font-bold tracking-wider">Cook</p>
+            <p class="text-sm font-bold text-bark">{recipe.cook_time_mins} min</p>
+          </div>
+          <div>
+            <p class="text-[11px] text-smoke uppercase font-bold tracking-wider">Level</p>
+            <ComplexityDots level={recipe.complexity} size="lg" />
+          </div>
+        </div>
+
+        {/* Serving Scaler */}
+        <div>
+          <p class="text-xs text-smoke uppercase font-bold tracking-wider mb-2">Servings</p>
+          <div class="flex gap-1.5" id="scaler-buttons">
+            {[1, 2, 3, 4].map((n) => (
+              <button
+                data-scaler={n}
+                class:list={[
+                  'w-10 h-10 rounded-md text-[15px] font-bold cursor-pointer transition-colors',
+                  n === 1 ? 'bg-turmeric text-white' : 'bg-sand text-bark hover:bg-turmeric-muted',
+                ]}
+              >
+                {n}×
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Body: Ingredients + Steps */}
+    <div class="grid md:grid-cols-[320px_1fr] gap-6 md:gap-8">
+      {/* Ingredients */}
+      <div>
+        <h2 class="text-base font-extrabold text-bark mb-3">Ingredients</h2>
+        <div class="bg-white rounded-lg border border-mist divide-y divide-sand">
+          {recipe.ingredients.map((ing, i) => (
+            <div class="flex items-center justify-between px-4 py-2.5" data-ingredient={i}>
+              <span class="text-sm text-bark">{ing.name_en}</span>
+              <span class="text-[13px] text-stone font-semibold qty">
+                {ing.quantity} {ing.unit}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Steps */}
+      <div>
+        <h2 class="text-base font-extrabold text-bark mb-3">Steps</h2>
+        <div class="flex flex-col gap-4">
+          {recipe.steps.map((step) => (
+            <div class="flex gap-3">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-turmeric-light text-turmeric flex items-center justify-center text-sm font-extrabold">
+                {step.order}
+              </div>
+              <div class="flex-1">
+                <p class="text-sm text-bark leading-relaxed">{step.text_en}</p>
+                <p class="font-tamil text-xs text-stone leading-relaxed mt-1">{step.text_ta}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* Edit Recipe Form (hidden by default) */}
+    <div id="edit-recipe-form" class="hidden fixed inset-0 bg-black/40 z-50 flex items-start justify-center pt-10 px-4 overflow-y-auto">
+      <div class="bg-cream rounded-xl border border-mist shadow-xl w-full max-w-[700px] p-6 mb-10">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-bark">Edit Recipe</h2>
+          <button id="close-edit-form" class="text-stone text-lg cursor-pointer">✕</button>
+        </div>
+        <form id="edit-form" class="space-y-5">
+          <div class="bg-white rounded-lg border border-mist p-4 space-y-3">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Name (English)*</label>
+                <input name="name_en" class="w-full rounded-md border border-mist px-3 py-2 text-sm" required />
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Name (Tamil)</label>
+                <input name="name_ta" class="w-full rounded-md border border-mist px-3 py-2 text-sm font-tamil" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Category</label>
+                <select name="category" class="w-full rounded-md border border-mist px-3 py-2 text-sm">
+                  {categories.map((c) => <option value={c} selected={c === recipe.category}>{catLabels[c] || c}</option>)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Veg</label>
+                <select name="veg" class="w-full rounded-md border border-mist px-3 py-2 text-sm">
+                  <option value="true" selected={recipe.veg}>Yes</option>
+                  <option value="false" selected={!recipe.veg}>No</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Complexity</label>
+                <select name="complexity" class="w-full rounded-md border border-mist px-3 py-2 text-sm">
+                  <option value="1" selected={recipe.complexity === 1}>1 - Easy</option>
+                  <option value="2" selected={recipe.complexity === 2}>2 - Medium</option>
+                  <option value="3" selected={recipe.complexity === 3}>3 - Hard</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Servings</label>
+                <input name="servings" type="number" min="1" value={recipe.servings} class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Prep Time (min)</label>
+                <input name="prep_time_mins" type="number" min="0" value={recipe.prep_time_mins} class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Cook Time (min)</label>
+                <input name="cook_time_mins" type="number" min="0" value={recipe.cook_time_mins} class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Tags</label>
+              <input name="tags" value={(recipe.tags || []).join(', ')} class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-mist p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-sm font-bold text-bark">Ingredients</h3>
+              <button type="button" id="edit-add-ing" class="text-xs text-turmeric font-semibold cursor-pointer">+ Add</button>
+            </div>
+            <div id="edit-ing-list" class="space-y-2"></div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-mist p-4 space-y-3">
+            <h3 class="text-sm font-bold text-bark">Steps</h3>
+            <div>
+              <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">English (one step per line)</label>
+              <textarea id="edit-steps-en" class="w-full rounded-md border border-mist px-3 py-2 text-sm" rows="5">{recipe.steps.map(s => s.text_en).join('\n')}</textarea>
+            </div>
+            <div>
+              <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Tamil (one step per line)</label>
+              <textarea id="edit-steps-ta" class="w-full rounded-md border border-mist px-3 py-2 text-sm font-tamil" rows="5">{recipe.steps.map(s => s.text_ta).join('\n')}</textarea>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="button" id="export-edit-recipe" class="rounded-md bg-turmeric text-white text-sm font-semibold px-4 py-2 cursor-pointer">Export JS</button>
+            <button type="button" id="copy-edit-recipe" class="hidden rounded-md bg-bark text-white text-xs font-semibold px-3 py-1.5 cursor-pointer">Copy</button>
+          </div>
+          <pre id="edit-recipe-output" class="hidden bg-white rounded-lg border border-mist p-4 text-xs overflow-auto max-h-60 font-mono"></pre>
+        </form>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ ingredients: recipe.ingredients }}>
+  const baseIngredients = ingredients;
+  const buttons = document.querySelectorAll('[data-scaler]');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const multiplier = parseInt(btn.dataset.scaler);
+
+      // Update active state
+      buttons.forEach((b) => {
+        b.classList.remove('bg-turmeric', 'text-white');
+        b.classList.add('bg-sand', 'text-bark');
+      });
+      btn.classList.remove('bg-sand', 'text-bark');
+      btn.classList.add('bg-turmeric', 'text-white');
+
+      // Update quantities
+      baseIngredients.forEach((ing, i) => {
+        const el = document.querySelector(`[data-ingredient="${i}"] .qty`);
+        if (el) {
+          const qty = Math.round(ing.quantity * multiplier * 100) / 100;
+          el.textContent = `${qty} ${ing.unit}`;
+        }
+      });
+    });
+  });
+</script>
+
+<script define:vars={{ recipeData: recipe }}>
+  window.__EDIT_RECIPE = recipeData;
+</script>
+
+<script>
+  const recipe = JSON.parse(JSON.stringify(window.__EDIT_RECIPE));
+  const overlay = document.getElementById('edit-recipe-form');
+  
+  // Open edit form
+  document.querySelector('[href$="admin/"]')?.remove(); // remove old admin link if any
+  document.getElementById('edit-btn')?.addEventListener('click', () => {
+    overlay.classList.remove('hidden');
+    populateIngredients();
+  });
+  document.getElementById('close-edit-form').addEventListener('click', () => overlay.classList.add('hidden'));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.add('hidden'); });
+
+  // Pre-fill form
+  const form = document.getElementById('edit-form');
+  form.name_en.value = recipe.name_en;
+  form.name_ta.value = recipe.name_ta || '';
+
+  function populateIngredients() {
+    const list = document.getElementById('edit-ing-list');
+    if (list.children.length) return;
+    (recipe.ingredients || []).forEach(ing => addEditIngRow(ing));
+    if (!recipe.ingredients?.length) addEditIngRow();
+  }
+
+  function addEditIngRow(data = {}) {
+    const div = document.createElement('div');
+    div.className = 'grid grid-cols-[1fr_60px_60px_80px_24px] gap-2 items-center';
+    div.innerHTML = `
+      <input class="ing-item rounded border border-mist px-2 py-1 text-xs" placeholder="Item" value="${data.name_en || ''}" />
+      <input class="ing-qty rounded border border-mist px-2 py-1 text-xs" type="number" placeholder="Qty" value="${data.quantity || ''}" />
+      <input class="ing-unit rounded border border-mist px-2 py-1 text-xs" placeholder="Unit" value="${data.unit || ''}" />
+      <select class="ing-cat rounded border border-mist px-1 py-1 text-xs">
+        <option value="vegetables" ${data.shop_category === 'vegetables' ? 'selected' : ''}>Veg</option>
+        <option value="grains" ${data.shop_category === 'grains' ? 'selected' : ''}>Grains</option>
+        <option value="spices" ${data.shop_category === 'spices' ? 'selected' : ''}>Spices</option>
+        <option value="dairy" ${data.shop_category === 'dairy' ? 'selected' : ''}>Dairy</option>
+        <option value="other" ${data.shop_category === 'other' ? 'selected' : ''}>Other</option>
+      </select>
+      <button type="button" class="text-clay text-xs cursor-pointer rm-ing">×</button>
+    `;
+    div.querySelector('.rm-ing').addEventListener('click', () => div.remove());
+    document.getElementById('edit-ing-list').appendChild(div);
+  }
+  document.getElementById('edit-add-ing').addEventListener('click', () => addEditIngRow());
+
+  function buildEditJS() {
+    const nameEn = form.name_en.value.trim();
+    if (!nameEn) return '';
+    const id = recipe.id;
+    const ings = [];
+    document.querySelectorAll('#edit-ing-list > div').forEach(row => {
+      const item = row.querySelector('.ing-item').value.trim();
+      if (!item) return;
+      ings.push(`    { item: "${item.toLowerCase().replace(/\\s+/g, '-')}", name_en: "${item}", quantity: ${parseFloat(row.querySelector('.ing-qty').value) || 0}, unit: "${row.querySelector('.ing-unit').value.trim() || 'nos'}", shop_category: "${row.querySelector('.ing-cat').value}" }`);
+    });
+    const stepsEn = document.getElementById('edit-steps-en').value.split('\\n').filter(l => l.trim());
+    const stepsTa = document.getElementById('edit-steps-ta').value.split('\\n').filter(l => l.trim());
+    const steps = stepsEn.map((line, i) =>
+      `    { order: ${i+1}, text_en: "${line.trim()}", text_ta: "${(stepsTa[i] || '').trim()}" }`
+    );
+    const tags = form.tags.value.split(',').map(t => t.trim()).filter(Boolean).map(t => `"${t}"`).join(', ');
+
+    return `export default {
+  id: "${id}",
+  name_en: "${nameEn}",
+  name_ta: "${form.name_ta.value.trim()}",
+  category: "${form.category.value}",
+  veg: ${form.veg.value},
+  complexity: ${form.complexity.value},
+  servings: ${parseInt(form.servings.value) || 4},
+  prep_time_mins: ${parseInt(form.prep_time_mins.value) || 0},
+  cook_time_mins: ${parseInt(form.cook_time_mins.value) || 0},
+  ingredients: [
+${ings.join(',\\n')}
+  ],
+  steps: [
+${steps.join(',\\n')}
+  ],
+  photos: [],
+  tags: [${tags}],
+};
+`;
+  }
+
+  document.getElementById('export-edit-recipe').addEventListener('click', () => {
+    const js = buildEditJS();
+    if (!js) return;
+    const out = document.getElementById('edit-recipe-output');
+    out.textContent = js;
+    out.classList.remove('hidden');
+    document.getElementById('copy-edit-recipe').classList.remove('hidden');
+  });
+  document.getElementById('copy-edit-recipe').addEventListener('click', () => {
+    navigator.clipboard?.writeText(document.getElementById('edit-recipe-output').textContent);
+    const btn = document.getElementById('copy-edit-recipe');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+</script>

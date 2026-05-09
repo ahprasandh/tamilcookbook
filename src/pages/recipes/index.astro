@@ -1,0 +1,321 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import recipes, { categories } from '../../data/recipes.js';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
+const catLabels = {
+  'tiffin/mains': 'Tiffin Mains',
+  'tiffin/sides': 'Tiffin Sides',
+  'lunch/mains': 'Lunch Mains',
+  'lunch/sides': 'Lunch Sides',
+  'accompaniments/items': 'Accompaniments',
+  'snacks/items': 'Snacks',
+  'desserts/items': 'Desserts',
+};
+---
+<BaseLayout title="Recipes — Tamil Cookbook" active="recipes">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-6">
+    {/* Header */}
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-extrabold text-bark">Recipes</h1>
+        <span id="recipe-count" class="rounded-full bg-sand text-bark text-xs font-bold px-2.5 py-0.5">{recipes.length}</span>
+        <button id="open-add-recipe" class="rounded-md bg-turmeric text-white text-xs font-semibold px-3 py-1.5 cursor-pointer hover:opacity-90">+ Add Recipe</button>
+      </div>
+      <div class="relative w-full md:w-72">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-smoke"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
+        <input
+          type="text"
+          id="recipe-search"
+          placeholder="Search recipes..."
+          class="w-full rounded-full bg-white border border-mist pl-9 pr-4 py-2 text-sm text-bark placeholder:text-smoke focus:outline-none focus:ring-2 focus:ring-turmeric/40"
+        />
+      </div>
+    </div>
+
+    {/* Category Tabs */}
+    <div class="flex gap-1.5 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+      <button
+        data-category="all"
+        class="category-tab flex-shrink-0 rounded-full px-4 py-1.5 text-[13px] font-semibold border border-mist cursor-pointer whitespace-nowrap bg-bark text-white"
+      >
+        All <span class="cat-count opacity-70">{recipes.length}</span>
+      </button>
+      {categories.map((cat) => (
+        <button
+          data-category={cat}
+          class="category-tab flex-shrink-0 rounded-full px-4 py-1.5 text-[13px] font-semibold border border-mist cursor-pointer whitespace-nowrap bg-white text-stone hover:bg-sand"
+        >
+          {catLabels[cat] || cat} <span class="cat-count opacity-70">{recipes.filter(r => r.category === cat).length}</span>
+        </button>
+      ))}
+    </div>
+
+    {/* Recipe Grid */}
+    <div id="recipe-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      {recipes.map((recipe) => (
+        <div data-recipe-id={recipe.id} data-recipe-cat={recipe.category} data-recipe-name={`${recipe.name_en} ${recipe.name_ta}`}>
+          <RecipeCard {...recipe} />
+        </div>
+      ))}
+    </div>
+
+    {/* No results */}
+    <div id="no-results" class="hidden text-center py-16">
+      <p class="text-xl mb-2"><svg class="w-8 h-8 mx-auto text-stone" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></p>
+      <p class="text-stone text-sm">No recipes found. Try a different search or category.</p>
+    </div>
+
+    {/* Add Recipe Form (hidden by default) */}
+    <div id="add-recipe-form" class="hidden fixed inset-0 bg-black/40 z-50 flex items-start justify-center pt-10 px-4 overflow-y-auto">
+      <div class="bg-cream rounded-xl border border-mist shadow-xl w-full max-w-[700px] p-6 mb-10">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-bark">New Recipe</h2>
+          <button id="close-add-form" class="text-stone text-lg cursor-pointer">✕</button>
+        </div>
+        <form id="new-recipe-form" class="space-y-5">
+          <div class="bg-white rounded-lg border border-mist p-4 space-y-3">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Name (English)*</label>
+                <input name="name_en" class="w-full rounded-md border border-mist px-3 py-2 text-sm" required />
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Name (Tamil)</label>
+                <input name="name_ta" class="w-full rounded-md border border-mist px-3 py-2 text-sm font-tamil" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Category</label>
+                <select name="category" class="w-full rounded-md border border-mist px-3 py-2 text-sm">
+                  {categories.map((c) => <option value={c}>{catLabels[c] || c}</option>)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Veg</label>
+                <select name="veg" class="w-full rounded-md border border-mist px-3 py-2 text-sm">
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Complexity</label>
+                <select name="complexity" class="w-full rounded-md border border-mist px-3 py-2 text-sm">
+                  <option value="1">1 - Easy</option>
+                  <option value="2">2 - Medium</option>
+                  <option value="3">3 - Hard</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Servings</label>
+                <input name="servings" type="number" min="1" value="4" class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Prep Time (min)</label>
+                <input name="prep_time_mins" type="number" min="0" class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Cook Time (min)</label>
+                <input name="cook_time_mins" type="number" min="0" class="w-full rounded-md border border-mist px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Tags (comma separated)</label>
+              <input name="tags" class="w-full rounded-md border border-mist px-3 py-2 text-sm" placeholder="everyday, comfort, spicy" />
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-mist p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-sm font-bold text-bark">Ingredients</h3>
+              <button type="button" id="add-ing-btn" class="text-xs text-turmeric font-semibold cursor-pointer">+ Add</button>
+            </div>
+            <div id="ing-list" class="space-y-2"></div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-mist p-4 space-y-3">
+            <h3 class="text-sm font-bold text-bark">Steps</h3>
+            <div>
+              <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">English (one step per line)</label>
+              <textarea id="new-steps-en" class="w-full rounded-md border border-mist px-3 py-2 text-sm" rows="5"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs text-smoke uppercase font-bold tracking-wider mb-1">Tamil (one step per line)</label>
+              <textarea id="new-steps-ta" class="w-full rounded-md border border-mist px-3 py-2 text-sm font-tamil" rows="5"></textarea>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="button" id="export-new-recipe" class="rounded-md bg-turmeric text-white text-sm font-semibold px-4 py-2 cursor-pointer">Export JS</button>
+            <button type="button" id="copy-new-recipe" class="hidden rounded-md bg-bark text-white text-xs font-semibold px-3 py-1.5 cursor-pointer">Copy</button>
+          </div>
+          <pre id="new-recipe-output" class="hidden bg-white rounded-lg border border-mist p-4 text-xs overflow-auto max-h-60 font-mono"></pre>
+        </form>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const search = document.getElementById('recipe-search');
+  const grid = document.getElementById('recipe-grid');
+  const noResults = document.getElementById('no-results');
+  const tabs = document.querySelectorAll('.category-tab');
+  const cards = grid.querySelectorAll('[data-recipe-id]');
+
+  let activeCategory = 'all';
+
+  function getParamsFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat');
+    const q = params.get('q');
+    return { cat: cat || 'all', q: q || '' };
+  }
+
+  function updateURL() {
+    const params = new URLSearchParams();
+    if (activeCategory !== 'all') params.set('cat', activeCategory);
+    const q = search.value.trim();
+    if (q) params.set('q', q);
+    const qs = params.toString();
+    const newUrl = window.location.pathname + (qs ? '?' + qs : '');
+    history.replaceState(null, '', newUrl);
+  }
+
+  function setActiveTab(category) {
+    activeCategory = category;
+    tabs.forEach((t) => {
+      const isActive = t.dataset.category === category;
+      t.classList.toggle('bg-bark', isActive);
+      t.classList.toggle('text-white', isActive);
+      t.classList.toggle('bg-white', !isActive);
+      t.classList.toggle('text-stone', !isActive);
+    });
+  }
+
+  function filterRecipes() {
+    const query = search.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const cat = card.dataset.recipeCat;
+      const name = card.dataset.recipeName.toLowerCase();
+      const matchesCat = activeCategory === 'all' || cat === activeCategory;
+      const matchesSearch = !query || name.includes(query);
+      const visible = matchesCat && matchesSearch;
+      card.style.display = visible ? '' : 'none';
+      if (visible) visibleCount++;
+    });
+
+    noResults.classList.toggle('hidden', visibleCount > 0);
+    document.getElementById('recipe-count').textContent = visibleCount;
+    updateURL();
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      setActiveTab(tab.dataset.category);
+      filterRecipes();
+    });
+  });
+
+  search.addEventListener('input', filterRecipes);
+
+  // Init from URL params
+  const initParams = getParamsFromURL();
+  if (initParams.cat !== 'all') setActiveTab(initParams.cat);
+  if (initParams.q) search.value = initParams.q;
+  filterRecipes();
+
+  // ---- Add Recipe Form ----
+  const addFormOverlay = document.getElementById('add-recipe-form');
+  document.getElementById('open-add-recipe').addEventListener('click', () => {
+    addFormOverlay.classList.remove('hidden');
+    if (!document.getElementById('ing-list').children.length) addIngRow();
+  });
+  document.getElementById('close-add-form').addEventListener('click', () => {
+    addFormOverlay.classList.add('hidden');
+  });
+  addFormOverlay.addEventListener('click', (e) => {
+    if (e.target === addFormOverlay) addFormOverlay.classList.add('hidden');
+  });
+
+  function addIngRow(data = {}) {
+    const div = document.createElement('div');
+    div.className = 'grid grid-cols-[1fr_60px_60px_80px_24px] gap-2 items-center';
+    div.innerHTML = `
+      <input class="ing-item rounded border border-mist px-2 py-1 text-xs" placeholder="Item" value="${data.name_en || ''}" />
+      <input class="ing-qty rounded border border-mist px-2 py-1 text-xs" type="number" placeholder="Qty" value="${data.quantity || ''}" />
+      <input class="ing-unit rounded border border-mist px-2 py-1 text-xs" placeholder="Unit" value="${data.unit || ''}" />
+      <select class="ing-cat rounded border border-mist px-1 py-1 text-xs">
+        <option value="vegetables">Veg</option><option value="grains">Grains</option>
+        <option value="spices">Spices</option><option value="dairy">Dairy</option>
+        <option value="other">Other</option>
+      </select>
+      <button type="button" class="text-clay text-xs cursor-pointer rm-ing">×</button>
+    `;
+    div.querySelector('.rm-ing').addEventListener('click', () => div.remove());
+    document.getElementById('ing-list').appendChild(div);
+  }
+  document.getElementById('add-ing-btn').addEventListener('click', () => addIngRow());
+
+  function buildRecipeJS() {
+    const form = document.getElementById('new-recipe-form');
+    const nameEn = form.name_en.value.trim();
+    if (!nameEn) return '';
+    const id = nameEn.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+    const ings = [];
+    document.querySelectorAll('#ing-list > div').forEach(row => {
+      const item = row.querySelector('.ing-item').value.trim();
+      if (!item) return;
+      ings.push(`    { item: "${item.toLowerCase().replace(/\\s+/g, '-')}", name_en: "${item}", quantity: ${parseFloat(row.querySelector('.ing-qty').value) || 0}, unit: "${row.querySelector('.ing-unit').value.trim() || 'nos'}", shop_category: "${row.querySelector('.ing-cat').value}" }`);
+    });
+    const stepsEn = document.getElementById('new-steps-en').value.split('\\n').filter(l => l.trim());
+    const stepsTa = document.getElementById('new-steps-ta').value.split('\\n').filter(l => l.trim());
+    const steps = stepsEn.map((line, i) =>
+      `    { order: ${i+1}, text_en: "${line.trim()}", text_ta: "${(stepsTa[i] || '').trim()}" }`
+    );
+    const tags = form.tags.value.split(',').map(t => t.trim()).filter(Boolean).map(t => `"${t}"`).join(', ');
+
+    return `export default {
+  id: "${id}",
+  name_en: "${nameEn}",
+  name_ta: "${form.name_ta.value.trim()}",
+  category: "${form.category.value}",
+  veg: ${form.veg.value},
+  complexity: ${form.complexity.value},
+  servings: ${parseInt(form.servings.value) || 4},
+  prep_time_mins: ${parseInt(form.prep_time_mins.value) || 0},
+  cook_time_mins: ${parseInt(form.cook_time_mins.value) || 0},
+  ingredients: [
+${ings.join(',\\n')}
+  ],
+  steps: [
+${steps.join(',\\n')}
+  ],
+  photos: [],
+  tags: [${tags}],
+};
+`;
+  }
+
+  document.getElementById('export-new-recipe').addEventListener('click', () => {
+    const js = buildRecipeJS();
+    if (!js) return;
+    const out = document.getElementById('new-recipe-output');
+    out.textContent = js;
+    out.classList.remove('hidden');
+    document.getElementById('copy-new-recipe').classList.remove('hidden');
+  });
+  document.getElementById('copy-new-recipe').addEventListener('click', () => {
+    navigator.clipboard?.writeText(document.getElementById('new-recipe-output').textContent);
+    const btn = document.getElementById('copy-new-recipe');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+</script>

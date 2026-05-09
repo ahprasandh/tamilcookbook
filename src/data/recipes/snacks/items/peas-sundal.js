@@ -1,0 +1,28 @@
+export default {
+  id: "peas-sundal",
+  name_en: "Peas Sundal",
+  name_ta: "பட்டாணி சுண்டல்",
+  category: "snacks/items",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "green-peas", name_en: "Green Peas (fresh/frozen)", quantity: 2, unit: "cup", shop_category: "vegetable" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 2, unit: "tbsp", shop_category: "vegetable" },
+    { item: "mustard", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.5, unit: "tsp", shop_category: "grains" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 2, unit: "nos", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Boil peas in salted water until just cooked. Drain.", text_ta: "பட்டாணியை உப்பு நீரில் வேகவைத்து வடிகட்டவும்." },
+    { order: 2, text_en: "Heat oil, splutter mustard, urad dal, red chilli, curry leaves, asafoetida.", text_ta: "எண்ணெயில் கடுகு, உளுத்தம் பருப்பு, காய்ந்த மிளகாய், கறிவேப்பிலை, பெருங்காயம் தாளிக்கவும்." },
+    { order: 3, text_en: "Add peas and salt. Toss well. Garnish with grated coconut.", text_ta: "பட்டாணி, உப்பு சேர்த்து கிளறி தேங்காய் துருவல் தூவவும்." },
+  ],
+  tags: ["evening-snack", "healthy", "quick"],
+};

@@ -1,0 +1,25 @@
+export default {
+  id: "idli",
+  name_en: "Idli",
+  name_ta: "இட்லி",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 480,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "idli-rice", name_en: "Idli Rice", quantity: 2, unit: "cup", shop_category: "grains" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "fenugreek-seeds", name_en: "Fenugreek Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak idli rice and urad dal with fenugreek seeds separately for 6-8 hours.", text_ta: "இட்லி அரிசி மற்றும் உளுத்தம் பருப்பை வெந்தயத்துடன் 6-8 மணி நேரம் ஊற வைக்கவும்." },
+    { order: 2, text_en: "Grind urad dal to a fluffy smooth batter. Grind rice to a slightly coarse batter.", text_ta: "உளுத்தம் பருப்பை பஞ்சு போல் அரைக்கவும். அரிசியை சற்று கொரகொரப்பாக அரைக்கவும்." },
+    { order: 3, text_en: "Mix both batters with salt. Ferment overnight in a warm place.", text_ta: "இரண்டு மாவையும் உப்பு சேர்த்து கலக்கவும். இரவு முழுவதும் புளிக்க வைக்கவும்." },
+    { order: 4, text_en: "Pour batter into greased idli moulds. Steam for 10-12 minutes.", text_ta: "எண்ணெய் தடவிய இட்லி அச்சில் மாவு ஊற்றி 10-12 நிமிடம் ஆவியில் வேக வைக்கவும்." },
+  ],
+  photos: ["final-1.jpg"],
+  tags: ["everyday", "comfort", "healthy"],
+};

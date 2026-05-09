@@ -1,0 +1,28 @@
+export default {
+  id: "soya-65",
+  name_en: "Soya 65",
+  name_ta: "சோயா 65",
+  category: "snacks/items",
+  veg: true,
+  complexity: 2,
+  servings: 4,
+  prep_time_mins: 20,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "soya-chunks", name_en: "Soya Chunks", quantity: 1, unit: "cup", shop_category: "grains" },
+    { item: "yogurt", name_en: "Yogurt", quantity: 2, unit: "tbsp", shop_category: "dairy" },
+    { item: "chilli-powder", name_en: "Chilli Powder", quantity: 2, unit: "tsp", shop_category: "spices" },
+    { item: "ginger-garlic", name_en: "Ginger Garlic Paste", quantity: 1, unit: "tbsp", shop_category: "spices" },
+    { item: "cornflour", name_en: "Cornflour", quantity: 2, unit: "tbsp", shop_category: "grains" },
+    { item: "rice-flour", name_en: "Rice Flour", quantity: 1, unit: "tbsp", shop_category: "grains" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 2, unit: "sprig", shop_category: "vegetable" },
+    { item: "food-colour", name_en: "Red Food Colour", quantity: 0.25, unit: "tsp", shop_category: "other" },
+    { item: "oil", name_en: "Oil", quantity: 2, unit: "cup", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak soya chunks in hot water for 10 minutes. Squeeze out water completely.", text_ta: "சோயா சங்க்ஸை சூடான நீரில் 10 நிமிடம் ஊற வைத்து தண்ணீரை நன்கு பிழியவும்." },
+    { order: 2, text_en: "Marinate with yogurt, chilli powder, ginger garlic paste, cornflour, rice flour, salt, and food colour for 15 minutes.", text_ta: "தயிர், மிளகாய்த்தூள், இஞ்சி பூண்டு, கார்ன்ஃப்ளார், அரிசி மாவு, உப்பு, ஃபுட் கலர் சேர்த்து 15 நிமிடம் ஊற வைக்கவும்." },
+    { order: 3, text_en: "Deep fry until crispy. Toss with fried curry leaves and serve.", text_ta: "மொறுமொறுப்பாக பொரித்து கறிவேப்பிலையுடன் கலந்து பரிமாறவும்." },
+  ],
+  tags: ["party", "spicy", "protein"],
+};

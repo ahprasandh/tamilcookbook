@@ -1,0 +1,260 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import recipes from '../../data/recipes.js';
+import foods from '../../data/foods.js';
+import plannerJson from '../../data/planner.json';
+
+// Build ingredient lookup for client-side
+const recipeIngredients = {};
+recipes.forEach((r) => {
+  recipeIngredients[r.id] = r.ingredients;
+});
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
+const shopCategories = {
+  vegetable: 'Vegetables',
+  meat: 'Meat & Seafood',
+  grains: 'Grains & Lentils',
+  spices: 'Spices & Condiments',
+  dairy: 'Dairy & Fresh',
+  other: 'Other',
+};
+---
+<BaseLayout title="Shopping List — Tamil Cookbook" active="shopping">
+  <div class="max-w-2xl mx-auto px-4 md:px-8 py-6">
+    {/* Header */}
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-extrabold text-bark">Shopping List</h1>
+      <button id="print-btn" class="hidden md:inline-flex rounded-md bg-sand text-bark text-sm font-semibold px-4 py-2 cursor-pointer hover:bg-mist print:hidden">
+        <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg> Print
+      </button>
+    </div>
+
+    {/* Week Selector */}
+    <div class="bg-white rounded-lg border border-mist p-3 flex items-center justify-between mb-6 print:hidden">
+      <button id="prev-week" class="text-stone hover:text-bark cursor-pointer text-lg px-2">◀</button>
+      <div class="text-center">
+        <p id="week-range" class="text-[15px] font-bold text-bark"></p>
+        <p id="week-label" class="text-[11px] text-turmeric font-semibold"></p>
+      </div>
+      <button id="next-week" class="text-stone hover:text-bark cursor-pointer text-lg px-2">▶</button>
+    </div>
+
+    {/* Progress */}
+    <div id="progress-section" class="hidden mb-6 print:hidden">
+      <div class="flex items-center justify-between text-xs text-stone mb-1">
+        <span id="progress-text">0 of 0 items checked</span>
+        <span id="progress-pct" class="font-bold">0%</span>
+      </div>
+      <div class="h-1.5 bg-sand rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-full bg-leaf rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+    </div>
+
+    {/* Shopping Groups */}
+    <div id="shopping-list" class="space-y-4">
+      {/* JS fills */}
+    </div>
+
+    {/* Empty state */}
+    <div id="empty-state" class="hidden text-center py-16">
+      <p class="text-xl mb-2"><svg class="w-8 h-8 mx-auto text-stone" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></p>
+      <p class="text-stone text-sm">No meals planned for this week.</p>
+    </div>
+
+    {/* Loading */}
+    <div id="shop-loading" class="text-center py-16">
+      <p class="text-stone text-sm">Loading shopping list...</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ recipeIngredients, shopCategories, plannerJson, foodsData: foods }}>
+  window.__RECIPE_INGREDIENTS = recipeIngredients;
+  window.__SHOP_CATEGORIES = shopCategories;
+  window.__PLANNER = plannerJson;
+  window.__FOODS = foodsData;
+</script>
+
+<script>
+  const recipeIngredients = window.__RECIPE_INGREDIENTS;
+  const shopCategories = window.__SHOP_CATEGORIES;
+  const allFoods = window.__FOODS;
+
+  const PANTRY_ID = '256b1a74-c6c8-4e07-822e-94dd8c997512';
+  const PANTRY_URL = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/planner`;
+
+  let plannerData = window.__PLANNER;
+  let currentWeekStart = getWeekStart(new Date());
+  let checkedItems = new Set();
+
+  function getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    d.setDate(diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  function formatDate(d) {
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  function dateKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function monthKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  // Extract all recipe IDs from a meal slot
+  function getMealIds(meal) {
+    if (!meal) return [];
+    if (Array.isArray(meal)) return meal; // snacks
+    const f = allFoods.find(x => x.id === meal);
+    if (!f) return [meal];
+    return [f.main, ...f.sides];
+  }
+
+  async function init() {
+    try {
+      const res = await fetch(PANTRY_URL);
+      if (res.ok) {
+        const cloud = await res.json();
+        if (cloud && Object.keys(cloud).length) {
+          plannerData = cloud;
+        }
+      }
+    } catch (e) {
+      console.warn('Pantry load failed, using local data', e);
+    }
+
+    document.getElementById('shop-loading').classList.add('hidden');
+    render();
+
+    document.getElementById('prev-week').addEventListener('click', () => {
+      currentWeekStart = new Date(currentWeekStart.getTime() - 7 * 86400000);
+      checkedItems.clear();
+      render();
+    });
+    document.getElementById('next-week').addEventListener('click', () => {
+      currentWeekStart = new Date(currentWeekStart.getTime() + 7 * 86400000);
+      checkedItems.clear();
+      render();
+    });
+    document.getElementById('print-btn').addEventListener('click', () => window.print());
+  }
+
+  function render() {
+    const weekEnd = new Date(currentWeekStart.getTime() + 6 * 86400000);
+    document.getElementById('week-range').textContent = `${formatDate(currentWeekStart)} – ${formatDate(weekEnd)}`;
+
+    const now = new Date();
+    const thisWeekStart = getWeekStart(now);
+    const isThisWeek = currentWeekStart.getTime() === thisWeekStart.getTime();
+    document.getElementById('week-label').textContent = isThisWeek ? 'Current Week' : '';
+
+    // Collect all recipe IDs for the week
+    const allIds = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(currentWeekStart.getTime() + i * 86400000);
+      const mk = monthKey(d);
+      const dk = dateKey(d);
+      const dayData = plannerData?.[mk]?.[dk];
+      if (!dayData) continue;
+      for (const slot of ['breakfast', 'lunch', 'dinner', 'snacks']) {
+        const val = dayData[slot];
+        if (!val) continue;
+        const ids = getMealIds(val);
+        allIds.push(...ids);
+      }
+    }
+
+    // Aggregate ingredients
+    const grouped = {};
+    for (const id of allIds) {
+      const ings = recipeIngredients[id];
+      if (!ings) continue;
+      for (const ing of ings) {
+        const cat = ing.shop_category || 'other';
+        if (!grouped[cat]) grouped[cat] = {};
+        const key = `${ing.item}|${ing.unit}`;
+        if (!grouped[cat][key]) {
+          grouped[cat][key] = { name: ing.name_en, quantity: 0, unit: ing.unit };
+        }
+        grouped[cat][key].quantity += ing.quantity;
+      }
+    }
+
+    const container = document.getElementById('shopping-list');
+    const empty = document.getElementById('empty-state');
+    const progress = document.getElementById('progress-section');
+
+    const catKeys = Object.keys(grouped);
+    if (catKeys.length === 0) {
+      container.innerHTML = '';
+      empty.classList.remove('hidden');
+      progress.classList.add('hidden');
+      return;
+    }
+
+    empty.classList.add('hidden');
+    progress.classList.remove('hidden');
+
+    let totalItems = 0;
+    let html = '';
+
+    for (const [catKey, catLabel] of Object.entries(shopCategories)) {
+      if (!grouped[catKey]) continue;
+      const items = Object.entries(grouped[catKey]);
+      html += `<div><h3 class="text-sm font-bold text-bark mb-2">${catLabel}</h3>`;
+      html += `<div class="bg-white rounded-lg border border-mist divide-y divide-sand">`;
+      for (const [key, item] of items) {
+        const checked = checkedItems.has(key);
+        const qty = Math.round(item.quantity * 100) / 100;
+        html += `<label class="flex items-center px-3 md:px-4 py-2.5 cursor-pointer gap-3 ${checked ? 'opacity-50' : ''}" data-item-key="${key}">
+          <input type="checkbox" class="shop-check sr-only" data-key="${key}" ${checked ? 'checked' : ''} />
+          <span class="w-5 h-5 md:w-[22px] md:h-[22px] rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors ${checked ? 'border-leaf bg-leaf' : 'border-mist bg-transparent'}">
+            ${checked ? '<span class="text-white text-xs font-bold">✓</span>' : ''}
+          </span>
+          <span class="text-sm text-bark flex-1 ${checked ? 'line-through' : ''}">${item.name}</span>
+          <span class="text-[13px] text-stone font-semibold">${qty} ${item.unit}</span>
+        </label>`;
+        totalItems++;
+      }
+      html += `</div></div>`;
+    }
+
+    container.innerHTML = html;
+    updateProgress(totalItems);
+
+    // Checkbox handlers
+    container.querySelectorAll('.shop-check').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const key = cb.dataset.key;
+        if (cb.checked) checkedItems.add(key); else checkedItems.delete(key);
+        render();
+      });
+    });
+  }
+
+  function updateProgress(total) {
+    const checked = checkedItems.size;
+    const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+    document.getElementById('progress-text').textContent = `${checked} of ${total} items checked`;
+    document.getElementById('progress-pct').textContent = `${pct}%`;
+    document.getElementById('progress-bar').style.width = `${pct}%`;
+  }
+
+  init();
+</script>
+
+<style>
+  @media print {
+    nav, #print-btn, .print\\:hidden { display: none !important; }
+    body { background: white !important; }
+    * { color: black !important; box-shadow: none !important; }
+  }
+</style>

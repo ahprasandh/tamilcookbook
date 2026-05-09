@@ -1,0 +1,26 @@
+export default {
+  id: "sandwich-toast",
+  name_en: "Sandwich Toast",
+  name_ta: "சாண்ட்விச் டோஸ்ட்",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 1,
+  servings: 2,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "bread", name_en: "Bread Slices", quantity: 4, unit: "nos", shop_category: "grains" },
+    { item: "butter", name_en: "Butter", quantity: 1, unit: "tbsp", shop_category: "dairy" },
+    { item: "onion", name_en: "Onion", quantity: 0.5, unit: "nos", shop_category: "vegetable" },
+    { item: "tomato", name_en: "Tomato", quantity: 0.5, unit: "nos", shop_category: "vegetable" },
+    { item: "cucumber", name_en: "Cucumber", quantity: 0.5, unit: "nos", shop_category: "vegetable" },
+    { item: "cheese", name_en: "Cheese Slice", quantity: 2, unit: "nos", shop_category: "dairy" },
+    { item: "chaat-masala", name_en: "Chaat Masala", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Butter the bread slices. Layer with sliced onion, tomato, cucumber, and cheese.", text_ta: "பிரெட்டில் வெண்ணெய் தடவி வெங்காயம், தக்காளி, வெள்ளரிக்காய், சீஸ் வைக்கவும்." },
+    { order: 2, text_en: "Sprinkle chaat masala and close with another bread slice.", text_ta: "சாட் மசாலா தூவி மற்றொரு பிரெட்டால் மூடவும்." },
+    { order: 3, text_en: "Toast in a sandwich maker or tawa until golden and crispy.", text_ta: "சாண்ட்விச் மேக்கர் அல்லது தோசைக்கல்லில் பொன்னிறமாக சுடவும்." },
+  ],
+  tags: ["quick", "kids-friendly", "breakfast"],
+};

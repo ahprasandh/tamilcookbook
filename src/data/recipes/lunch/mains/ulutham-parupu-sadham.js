@@ -1,0 +1,28 @@
+export default {
+  id: "ulutham-parupu-sadham",
+  name_en: "Ulutham Parupu Sadham",
+  name_ta: "உளுத்தம் பருப்பு சாதம்",
+  category: "lunch/mains",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "rice", name_en: "Cooked Rice", quantity: 3, unit: "cup", shop_category: "grains" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.25, unit: "cup", shop_category: "grains" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 4, unit: "nos", shop_category: "spices" },
+    { item: "black-pepper", name_en: "Black Pepper", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "cumin", name_en: "Cumin Seeds", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+    { item: "ghee", name_en: "Ghee", quantity: 1, unit: "tbsp", shop_category: "dairy" },
+  ],
+  steps: [
+    { order: 1, text_en: "Dry roast urad dal, red chillies, pepper, and cumin until golden. Cool and grind into a coarse powder.", text_ta: "உளுத்தம் பருப்பு, காய்ந்த மிளகாய், மிளகு, சீரகம் வறுத்து ஆறிய பின் கொரகொரப்பாக பொடிக்கவும்." },
+    { order: 2, text_en: "Heat sesame oil and ghee. Add asafoetida and curry leaves.", text_ta: "நல்லெண்ணெய், நெய்யில் பெருங்காயம், கறிவேப்பிலை தாளிக்கவும்." },
+    { order: 3, text_en: "Add hot cooked rice, the ground powder, and salt. Mix well.", text_ta: "சூடான சாதம், அரைத்த பொடி, உப்பு சேர்த்து நன்கு கலக்கவும்." },
+  ],
+  tags: ["quick", "comfort", "everyday"],
+};

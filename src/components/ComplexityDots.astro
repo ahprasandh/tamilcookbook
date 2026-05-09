@@ -1,0 +1,16 @@
+---
+interface Props {
+  level: 1 | 2 | 3;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { level, size = 'md' } = Astro.props;
+const sizeMap = { sm: 'w-1.5 h-1.5', md: 'w-2 h-2', lg: 'w-2.5 h-2.5' };
+const colorMap: Record<number, string> = { 1: 'bg-leaf', 2: 'bg-turmeric', 3: 'bg-clay' };
+const labels: Record<number, string> = { 1: 'Easy', 2: 'Medium', 3: 'Hard' };
+---
+<span class="inline-flex items-center gap-[3px]" title={labels[level]} aria-label={`Complexity: ${labels[level]}`}>
+  {[1, 2, 3].map((i) => (
+    <span class:list={['rounded-full', sizeMap[size], i <= level ? colorMap[level] : 'bg-mist']}></span>
+  ))}
+</span>

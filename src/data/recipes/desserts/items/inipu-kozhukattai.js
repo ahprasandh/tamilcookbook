@@ -1,0 +1,26 @@
+export default {
+  id: "inipu-kozhukattai",
+  name_en: "Inipu Kozhukattai",
+  name_ta: "இனிப்பு கொழுக்கட்டை",
+  category: "desserts/items",
+  veg: true,
+  complexity: 2,
+  servings: 4,
+  prep_time_mins: 15,
+  cook_time_mins: 20,
+  ingredients: [
+    { item: "rice-flour", name_en: "Rice Flour", quantity: 2, unit: "cup", shop_category: "grains" },
+    { item: "jaggery", name_en: "Jaggery (grated)", quantity: 1, unit: "cup", shop_category: "other" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 0.5, unit: "cup", shop_category: "vegetable" },
+    { item: "cardamom", name_en: "Cardamom Powder", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "pinch", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Melt jaggery in little water, strain. Add grated coconut, cardamom. Cook until filling thickens.", text_ta: "வெல்லத்தை சிறிது நீரில் கரைத்து வடிகட்டி தேங்காய், ஏலக்காய் சேர்த்து கெட்டியாக கிளறவும்." },
+    { order: 2, text_en: "Boil 2 cups water with oil and salt. Add rice flour, mix to smooth dough. Cool slightly.", text_ta: "2 கப் நீரை எண்ணெய், உப்புடன் கொதிக்கவைத்து மாவு சேர்த்து பிசையவும். சற்று ஆறவிடவும்." },
+    { order: 3, text_en: "Take small ball of dough, flatten, place filling in center, seal into a ball or modak shape.", text_ta: "மாவை சிறிய உருண்டையாக எடுத்து தட்டி பூரணம் வைத்து மூடி உருட்டவும்." },
+    { order: 4, text_en: "Steam for 10-12 mins. Serve warm.", text_ta: "10-12 நிமிடம் ஆவியில் வேகவைத்து பரிமாறவும்." },
+  ],
+  tags: ["steamed", "festival", "sweet"],
+};

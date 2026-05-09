@@ -1,0 +1,27 @@
+export default {
+  id: "carrot-kheer",
+  name_en: "Carrot Kheer",
+  name_ta: "கேரட் கீர்",
+  category: "desserts/items",
+  veg: true,
+  complexity: 2,
+  servings: 4,
+  prep_time_mins: 10,
+  cook_time_mins: 25,
+  ingredients: [
+    { item: "carrot", name_en: "Carrot (grated)", quantity: 3, unit: "nos", shop_category: "vegetable" },
+    { item: "milk", name_en: "Milk", quantity: 2, unit: "cup", shop_category: "other" },
+    { item: "sugar", name_en: "Sugar", quantity: 0.5, unit: "cup", shop_category: "other" },
+    { item: "ghee", name_en: "Ghee", quantity: 2, unit: "tbsp", shop_category: "other" },
+    { item: "cashew", name_en: "Cashews", quantity: 8, unit: "nos", shop_category: "other" },
+    { item: "raisins", name_en: "Raisins", quantity: 8, unit: "nos", shop_category: "other" },
+    { item: "cardamom", name_en: "Cardamom Powder", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Heat ghee, fry cashews and raisins. Set aside. Sauté grated carrot for 3-4 mins.", text_ta: "நெய்யில் முந்திரி, திராட்சை வறுத்து எடுக்கவும். கேரட் துருவலை 3-4 நிமிடம் வதக்கவும்." },
+    { order: 2, text_en: "Add milk to carrot. Cook on medium heat, stirring often, until milk reduces by half (15-20 mins).", text_ta: "பால் சேர்த்து நடுத்தர தீயில் பாதியாக சுண்டும் வரை (15-20 நிமிடம்) கிளறவும்." },
+    { order: 3, text_en: "Add sugar, cardamom. Cook 5 more mins until thick. Add fried nuts.", text_ta: "சர்க்கரை, ஏலக்காய் சேர்த்து 5 நிமிடம் கெட்டியாக கிளறி முந்திரி, திராட்சை சேர்க்கவும்." },
+    { order: 4, text_en: "Serve warm or chilled.", text_ta: "சூடாகவோ குளிர்ச்சியாகவோ பரிமாறவும்." },
+  ],
+  tags: ["sweet", "festive"],
+};

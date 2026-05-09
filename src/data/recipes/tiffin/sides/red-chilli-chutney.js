@@ -1,0 +1,26 @@
+export default {
+  id: "red-chilli-chutney",
+  name_en: "Red Chilli Chutney",
+  name_ta: "சிவப்பு மிளகாய் சட்னி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 8, unit: "nos", shop_category: "spices" },
+    { item: "onion", name_en: "Onion", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "tamarind", name_en: "Tamarind", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 2, unit: "tbsp", shop_category: "vegetable" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.5, unit: "tsp", shop_category: "grains" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tbsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Heat a little oil. Fry red chillies and onion until slightly charred.", text_ta: "சிறிது எண்ணெயில் காய்ந்த மிளகாய், வெங்காயம் வதக்கவும்." },
+    { order: 2, text_en: "Grind with coconut, tamarind, and salt into a smooth chutney.", text_ta: "தேங்காய், புளி, உப்பு சேர்த்து நைசாக அரைக்கவும்." },
+    { order: 3, text_en: "Temper with mustard seeds and urad dal in sesame oil. Pour over chutney.", text_ta: "நல்லெண்ணெயில் கடுகு, உளுத்தம் பருப்பு தாளித்து சட்னியில் சேர்க்கவும்." },
+  ],
+  tags: ["everyday", "spicy", "condiment"],
+};

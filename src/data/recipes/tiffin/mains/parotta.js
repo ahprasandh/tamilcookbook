@@ -1,0 +1,27 @@
+export default {
+  id: "parotta",
+  name_en: "Parotta",
+  name_ta: "பரோட்டா",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 3,
+  servings: 4,
+  prep_time_mins: 60,
+  cook_time_mins: 20,
+  ingredients: [
+    { item: "maida", name_en: "All Purpose Flour (Maida)", quantity: 3, unit: "cup", shop_category: "grains" },
+    { item: "egg", name_en: "Egg", quantity: 1, unit: "nos", shop_category: "other" },
+    { item: "sugar", name_en: "Sugar", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil", quantity: 3, unit: "tbsp", shop_category: "other" },
+    { item: "water", name_en: "Water", quantity: 1, unit: "cup", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Mix maida, salt, sugar. Add egg, oil, and water gradually. Knead into a soft, smooth dough.", text_ta: "மைதா, உப்பு, சர்க்கரை கலந்து முட்டை, எண்ணெய், தண்ணீர் சேர்த்து மிருதுவாக பிசையவும்." },
+    { order: 2, text_en: "Divide into balls, coat with oil. Rest for 1 hour.", text_ta: "உருண்டைகளாக உருட்டி எண்ணெய் தடவி 1 மணி நேரம் ஓய்வு கொடுக்கவும்." },
+    { order: 3, text_en: "Take each ball, stretch thin like a paper on oiled surface. Coil into a spiral and flatten slightly.", text_ta: "ஒவ்வொரு உருண்டையையும் எண்ணெய் தடவிய மேற்பரப்பில் காகிதம் போல் மெல்லியதாக இழுத்து சுருள் போல் சுற்றி லேசாக தட்டவும்." },
+    { order: 4, text_en: "Cook on hot tawa with oil, pressing and flipping until golden and flaky on both sides.", text_ta: "சூடான தோசைக்கல்லில் எண்ணெய் விட்டு அழுத்தி இருபுறமும் பொன்னிறமாக சுடவும்." },
+    { order: 5, text_en: "Clap between hands to separate layers. Serve hot.", text_ta: "கைகளால் தட்டி அடுக்குகளை பிரித்து சூடாக பரிமாறவும்." },
+  ],
+  tags: ["flaky", "street-food", "traditional"],
+};

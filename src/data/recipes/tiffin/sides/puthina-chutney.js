@@ -1,0 +1,26 @@
+export default {
+  id: "puthina-chutney",
+  name_en: "Puthina Chutney",
+  name_ta: "புதினா சட்னி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 5,
+  cook_time_mins: 5,
+  ingredients: [
+    { item: "mint", name_en: "Mint Leaves", quantity: 1, unit: "cup", shop_category: "vegetable" },
+    { item: "coriander-leaves", name_en: "Coriander Leaves", quantity: 0.5, unit: "cup", shop_category: "vegetable" },
+    { item: "green-chilli", name_en: "Green Chilli", quantity: 3, unit: "nos", shop_category: "vegetable" },
+    { item: "onion", name_en: "Onion", quantity: 0.5, unit: "nos", shop_category: "vegetable" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 2, unit: "tbsp", shop_category: "vegetable" },
+    { item: "tamarind", name_en: "Tamarind", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "oil", name_en: "Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Grind mint leaves, coriander leaves, green chillies, onion, coconut, tamarind, and salt into a smooth paste.", text_ta: "புதினா, கொத்தமல்லி, பச்சை மிளகாய், வெங்காயம், தேங்காய், புளி, உப்பு சேர்த்து நைசாக அரைக்கவும்." },
+    { order: 2, text_en: "Temper with mustard seeds in oil and mix into chutney.", text_ta: "எண்ணெயில் கடுகு தாளித்து சட்னியில் கலக்கவும்." },
+  ],
+  tags: ["everyday", "fresh", "condiment"],
+};

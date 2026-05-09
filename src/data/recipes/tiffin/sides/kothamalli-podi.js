@@ -1,0 +1,27 @@
+export default {
+  id: "kothamalli-podi",
+  name_en: "Kothamalli Podi",
+  name_ta: "கொத்தமல்லி பொடி",
+  category: "tiffin/sides",
+  veg: true,
+  complexity: 1,
+  servings: 8,
+  prep_time_mins: 5,
+  cook_time_mins: 10,
+  ingredients: [
+    { item: "coriander-seeds", name_en: "Coriander Seeds", quantity: 1, unit: "cup", shop_category: "spices" },
+    { item: "urad-dal", name_en: "Urad Dal", quantity: 0.25, unit: "cup", shop_category: "grains" },
+    { item: "chana-dal", name_en: "Chana Dal", quantity: 2, unit: "tbsp", shop_category: "grains" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 6, unit: "nos", shop_category: "spices" },
+    { item: "black-pepper", name_en: "Black Pepper", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "asafoetida", name_en: "Asafoetida", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 1, unit: "tsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Dry roast coriander seeds until fragrant and lightly browned. Set aside.", text_ta: "மல்லி (தனியா) நல்ல வாசனை வரும் வரை வறுத்து எடுக்கவும்." },
+    { order: 2, text_en: "Roast urad dal, chana dal, red chillies, and pepper until golden.", text_ta: "உளுத்தம் பருப்பு, கடலைப் பருப்பு, காய்ந்த மிளகாய், மிளகு பொன்னிறமாக வறுக்கவும்." },
+    { order: 3, text_en: "Cool and grind everything with asafoetida and salt into a coarse powder.", text_ta: "ஆறிய பின் பெருங்காயம், உப்பு சேர்த்து கொரகொரப்பாக பொடிக்கவும்." },
+    { order: 4, text_en: "Serve with sesame oil and hot rice or idli/dosa.", text_ta: "நல்லெண்ணெய் விட்டு சூடான சாதம் அல்லது இட்லி/தோசையுடன் பரிமாறவும்." },
+  ],
+  tags: ["everyday", "condiment", "staple"],
+};

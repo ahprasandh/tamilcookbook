@@ -1,0 +1,28 @@
+export default {
+  id: "keerai-kadayal",
+  name_en: "Keerai Kadayal",
+  name_ta: "கீரை கடையல்",
+  category: "lunch/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 10,
+  cook_time_mins: 20,
+  ingredients: [
+    { item: "keerai", name_en: "Spinach / Any Greens", quantity: 2, unit: "bunch", shop_category: "vegetable" },
+    { item: "toor-dal", name_en: "Toor Dal", quantity: 0.5, unit: "cup", shop_category: "grains" },
+    { item: "onion", name_en: "Onion (small)", quantity: 5, unit: "nos", shop_category: "vegetable" },
+    { item: "garlic", name_en: "Garlic", quantity: 4, unit: "cloves", shop_category: "vegetable" },
+    { item: "dry-red-chilli", name_en: "Dry Red Chilli", quantity: 3, unit: "nos", shop_category: "spices" },
+    { item: "cumin", name_en: "Cumin Seeds", quantity: 0.5, unit: "tsp", shop_category: "spices" },
+    { item: "sesame-oil", name_en: "Sesame Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+  ],
+  steps: [
+    { order: 1, text_en: "Wash and chop greens. Pressure cook toor dal for 3 whistles.", text_ta: "கீரையை கழுவி நறுக்கவும். துவரம் பருப்பை 3 விசில் வேக வைக்கவும்." },
+    { order: 2, text_en: "Cook greens with small onions, garlic, and red chillies until wilted and soft.", text_ta: "கீரையை சின்ன வெங்காயம், பூண்டு, காய்ந்த மிளகாய் சேர்த்து வதக்கி வேக வைக்கவும்." },
+    { order: 3, text_en: "Add cooked dal to the greens and mash everything together well.", text_ta: "வெந்த பருப்பை கீரையில் சேர்த்து நன்கு கடையவும்." },
+    { order: 4, text_en: "Temper with sesame oil, cumin seeds, and dried red chillies. Mix and serve with rice.", text_ta: "நல்லெண்ணெயில் சீரகம், காய்ந்த மிளகாய் தாளித்து கலந்து சாதத்துடன் பரிமாறவும்." },
+  ],
+  tags: ["everyday", "healthy", "traditional"],
+};

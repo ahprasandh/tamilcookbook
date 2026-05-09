@@ -1,0 +1,28 @@
+export default {
+  id: "aappam",
+  name_en: "Aappam",
+  name_ta: "ஆப்பம்",
+  category: "tiffin/mains",
+  veg: true,
+  complexity: 2,
+  servings: 4,
+  prep_time_mins: 480,
+  cook_time_mins: 20,
+  ingredients: [
+    { item: "raw-rice", name_en: "Raw Rice", quantity: 2, unit: "cup", shop_category: "grains" },
+    { item: "coconut", name_en: "Grated Coconut", quantity: 0.5, unit: "cup", shop_category: "vegetable" },
+    { item: "cooked-rice", name_en: "Cooked Rice", quantity: 0.25, unit: "cup", shop_category: "grains" },
+    { item: "sugar", name_en: "Sugar", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "yeast", name_en: "Instant Yeast", quantity: 1, unit: "tsp", shop_category: "other" },
+    { item: "salt", name_en: "Salt", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "coconut-milk", name_en: "Coconut Milk (thin)", quantity: 0.5, unit: "cup", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Soak raw rice for 4-6 hours. Grind with coconut, cooked rice, and water to a smooth batter.", text_ta: "அரிசியை 4-6 மணி நேரம் ஊற வைத்து தேங்காய், சோறு சேர்த்து மிருதுவாக அரைக்கவும்." },
+    { order: 2, text_en: "Add sugar, salt, and yeast. Mix well. Ferment overnight or 6-8 hours.", text_ta: "சர்க்கரை, உப்பு, ஈஸ்ட் சேர்த்து கலந்து 6-8 மணி நேரம் புளிக்க வைக்கவும்." },
+    { order: 3, text_en: "Add thin coconut milk to adjust batter consistency (slightly thin and pourable).", text_ta: "தேங்காய் பால் சேர்த்து மாவை ஊற்றும் பதத்தில் கரைக்கவும்." },
+    { order: 4, text_en: "Heat aappam pan, pour a ladleful and swirl to spread thin at edges with thick center. Cover and cook.", text_ta: "ஆப்ப சட்டியை சூடாக்கி மாவை ஊற்றி ஓரங்கள் மெல்லியதாகவும் நடுவில் தடிமனாகவும் சுழற்றி மூடி வேகவிடவும்." },
+    { order: 5, text_en: "Cook until edges are crisp and lacy, center is soft and spongy.", text_ta: "ஓரங்கள் மொறுமொறுப்பாகவும் நடுவில் பஞ்சு போல் மெத்தென்றும் வெந்ததும் எடுக்கவும்." },
+  ],
+  tags: ["fermented", "traditional"],
+};

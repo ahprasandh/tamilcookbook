@@ -1,0 +1,409 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import recipes from '../data/recipes.js';
+import foods from '../data/foods.js';
+import plannerData from '../data/planner.json';
+
+// Build a recipe lookup map for client-side use
+const recipeMap = {};
+recipes.forEach((r) => {
+  recipeMap[r.id] = { id: r.id, name_en: r.name_en, name_ta: r.name_ta, category: r.category, veg: r.veg, complexity: r.complexity };
+});
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<BaseLayout title="Tamil Cookbook — Monthly Meal Calendar" active="calendar">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-6">
+    {/* Month Header */}
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <button id="prev-month" class="text-stone hover:text-bark cursor-pointer text-lg px-2">◀</button>
+        <h1 id="month-title" class="text-xl md:text-2xl font-extrabold text-bark"></h1>
+        <button id="next-month" class="text-stone hover:text-bark cursor-pointer text-lg px-2">▶</button>
+      </div>
+      <button id="today-btn" class="hidden md:inline-flex rounded-md bg-sand text-bark text-sm font-semibold px-4 py-2 cursor-pointer hover:bg-mist">
+        Today
+      </button>
+    </div>
+
+    {/* Desktop Calendar Grid */}
+    <div class="hidden md:block">
+      {/* Day headers */}
+      <div class="grid grid-cols-7 mb-1">
+        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
+          <div class="text-center text-[11px] font-bold text-smoke uppercase tracking-wider py-2">{d}</div>
+        ))}
+      </div>
+      <div id="calendar-grid" class="grid grid-cols-7 bg-mist gap-px rounded-lg overflow-hidden">
+        {/* JS fills this */}
+      </div>
+    </div>
+
+    {/* Mobile: Mini calendar + week view */}
+    <div class="md:hidden">
+      <div id="mini-calendar" class="mb-4">
+        {/* Mini month dots */}
+        <div class="grid grid-cols-7 gap-1 text-center mb-3">
+          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d) => (
+            <div class="text-[10px] font-bold text-smoke uppercase">{d}</div>
+          ))}
+        </div>
+        <div id="mini-grid" class="grid grid-cols-7 gap-1 text-center">
+          {/* JS fills */}
+        </div>
+      </div>
+
+      {/* Today's meals */}
+      <div id="mobile-day-detail" class="space-y-3">
+        {/* JS fills */}
+      </div>
+    </div>
+
+    {/* Day detail panel (desktop) */}
+    <div id="day-detail" class="hidden mt-4 bg-white rounded-lg border border-mist p-5 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="detail-title" class="text-lg font-extrabold text-bark"></h2>
+        <button id="close-detail" class="text-smoke hover:text-bark cursor-pointer text-xl">✕</button>
+      </div>
+      <div id="detail-content" class="space-y-4">
+        {/* JS fills */}
+      </div>
+    </div>
+
+    {/* Loading / Error states */}
+    <div id="calendar-loading" class="text-center py-16">
+      <p class="text-stone text-sm">Loading calendar...</p>
+    </div>
+    <div id="calendar-error" class="hidden text-center py-16">
+      <p class="text-clay text-sm mb-2">Couldn't load calendar. Check connection.</p>
+      <button id="retry-btn" class="rounded-md bg-sand text-bark text-sm font-semibold px-4 py-2 cursor-pointer">Retry</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ recipeMap, base, plannerData, foodsData: foods }}>
+  window.__RECIPE_MAP = recipeMap;
+  window.__BASE = base;
+  window.__PLANNER = plannerData;
+  window.__FOODS = foodsData;
+</script>
+
+<script>
+  const recipeMap = window.__RECIPE_MAP;
+  const base = window.__BASE;
+  const allFoods = window.__FOODS;
+
+  const PANTRY_ID = '256b1a74-c6c8-4e07-822e-94dd8c997512';
+  const PANTRY_URL = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/planner`;
+
+  let plannerData = window.__PLANNER;
+  let currentYear, currentMonth;
+
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+  const mealTypes = [
+    { key: 'breakfast', label: 'Breakfast', dot: '#E8A317', bg: '#FFF3D6' },
+    { key: 'lunch', label: 'Lunch', dot: '#2D7A3A', bg: '#E8F5EA' },
+    { key: 'dinner', label: 'Dinner', dot: '#D35400', bg: '#FFF0E5' },
+    { key: 'extras', label: 'Extras', dot: '#8E44AD', bg: '#F5EAFA' },
+  ];
+
+  // Render combo-aware meal cards for a slot
+  function renderMealCards(meal, mode) {
+    const isMobile = mode === 'mobile';
+    const w = isMobile ? 'w-[130px]' : 'w-[140px]';
+    const imgH = isMobile ? 'h-16' : 'h-20';
+    const cardBg = isMobile ? 'bg-sand' : 'bg-white border border-mist';
+    const gap = isMobile ? 'gap-2' : 'gap-3';
+
+    function card(id, isMain) {
+      const r = recipeMap[id];
+      const name = r?.name_en || id;
+      const ta = r?.name_ta || '';
+      const highlight = isMain ? 'ring-2 ring-turmeric/40' : '';
+      const mainBadge = isMain ? `<span class="absolute top-1 right-1 bg-turmeric text-white text-[8px] font-bold px-1 rounded">MAIN</span>` : '';
+      const imgSrc = `${base}images/recipes/${id}.jpg`;
+      return `<a href="${base}recipes/${id}/" class="flex-shrink-0 ${w} ${cardBg} rounded-lg p-2${isMobile ? '' : '.5'} no-underline hover:shadow-md transition-shadow relative ${highlight}">
+        ${mainBadge}
+        <img src="${imgSrc}" alt="${name}" class="${imgH} w-full rounded${isMobile ? '' : '-md'} object-cover mb-${isMobile ? '1.5' : '2'}" onerror="this.style.display='none'" />
+        <p class="text-xs font-bold text-bark truncate">${name}</p>
+        <p class="font-tamil text-[10px] text-stone truncate">${ta}</p>
+      </a>`;
+    }
+
+    let html = `<div class="flex ${gap} overflow-x-auto pb-${isMobile ? '1' : '2'}">`;
+
+    if (Array.isArray(meal)) {
+      // Snacks array
+      for (const id of meal) html += card(id, false);
+    } else {
+      // Food ID string — resolve to main + sides
+      const f = allFoods.find(x => x.id === meal);
+      if (f) {
+        html += card(f.main, true);
+        for (const id of f.sides) html += card(id, false);
+      } else {
+        html += card(meal, false);
+      }
+    }
+
+    html += `</div>`;
+    return html;
+  }
+
+  async function init() {
+    try {
+      const res = await fetch(PANTRY_URL);
+      if (res.ok) {
+        const cloud = await res.json();
+        if (cloud && Object.keys(cloud).length) {
+          plannerData = cloud;
+        }
+      }
+    } catch (e) {
+      console.warn('Pantry load failed, using local data', e);
+    }
+
+    const now = new Date();
+    currentYear = now.getFullYear();
+    currentMonth = now.getMonth();
+
+    document.getElementById('calendar-loading').classList.add('hidden');
+    render();
+
+    document.getElementById('prev-month').addEventListener('click', () => { changeMonth(-1); });
+    document.getElementById('next-month').addEventListener('click', () => { changeMonth(1); });
+    document.getElementById('today-btn').addEventListener('click', () => {
+      const now = new Date();
+      currentYear = now.getFullYear();
+      currentMonth = now.getMonth();
+      render();
+    });
+    document.getElementById('close-detail').addEventListener('click', () => {
+      document.getElementById('day-detail').classList.add('hidden');
+      history.replaceState(null, '', window.location.pathname);
+    });
+
+    // Restore day from URL hash
+    const hash = window.location.hash.slice(1); // e.g. 2026-05-09
+    if (hash && /^\d{4}-\d{2}-\d{2}$/.test(hash)) {
+      const [y, m, d] = hash.split('-').map(Number);
+      currentYear = y;
+      currentMonth = m - 1;
+      render();
+      showDayDetail(d);
+    }
+  }
+
+  function changeMonth(delta) {
+    currentMonth += delta;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    render();
+  }
+
+  function getMonthKey() {
+    return `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+  }
+
+  function render() {
+    document.getElementById('month-title').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    renderDesktop();
+    renderMobile();
+  }
+
+  function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  function getFirstDayOfWeek(y, m) { return (new Date(y, m, 1).getDay() + 6) % 7; } // Mon=0
+
+  function getDateKey(day) {
+    return `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
+  function getDayData(day) {
+    const mk = getMonthKey();
+    const dk = getDateKey(day);
+    return plannerData?.[mk]?.[dk] || null;
+  }
+
+  // Extract all recipe IDs from a meal slot
+  function getMealIds(meal) {
+    if (!meal) return [];
+    if (Array.isArray(meal)) return meal; // snacks
+    const f = allFoods.find(x => x.id === meal);
+    if (!f) return [meal];
+    return [f.main, ...f.sides];
+  }
+
+  // Get the display name for a meal slot (show main dish name)
+  function getMealLabel(meal) {
+    if (!meal) return '';
+    if (Array.isArray(meal)) return recipeName(meal[0]);
+    const f = allFoods.find(x => x.id === meal);
+    if (f) return recipeName(f.main);
+    return recipeName(meal);
+  }
+
+  function recipeName(id) {
+    return recipeMap[id]?.name_en || id;
+  }
+
+  function makePill(type, label) {
+    const t = mealTypes.find((m) => m.key === type);
+    return `<span style="background:${t.bg};color:${t.dot}" class="inline-flex items-center gap-1 rounded-full px-1.5 py-[2px] text-[10px] font-semibold leading-none">
+      <span style="background:${t.dot}" class="w-1 h-1 rounded-full"></span>${label}
+    </span>`;
+  }
+
+  function renderDesktop() {
+    const grid = document.getElementById('calendar-grid');
+    const days = getDaysInMonth(currentYear, currentMonth);
+    const startDay = getFirstDayOfWeek(currentYear, currentMonth);
+    const today = new Date();
+    const isThisMonth = today.getFullYear() === currentYear && today.getMonth() === currentMonth;
+    const todayDate = today.getDate();
+
+    let html = '';
+    // Empty cells before month starts
+    for (let i = 0; i < startDay; i++) {
+      html += `<div class="bg-sand min-h-[95px] p-2"></div>`;
+    }
+
+    for (let d = 1; d <= days; d++) {
+      const data = getDayData(d);
+      const isToday = isThisMonth && d === todayDate;
+      const todayClass = isToday ? 'bg-turmeric-light border-l-[3px] border-turmeric' : 'bg-white';
+      const dateClass = isToday ? 'text-turmeric font-extrabold' : 'text-bark font-semibold';
+
+      let pills = '';
+      if (data) {
+        for (const mt of mealTypes) {
+          const val = data[mt.key];
+          if (val) {
+            const label = getMealLabel(val);
+            pills += makePill(mt.key, label.length > 8 ? label.slice(0, 7) + '…' : label);
+          }
+        }
+      }
+
+      html += `<div class="${todayClass} min-h-[95px] p-2 cursor-pointer hover:bg-sand transition-colors" data-day="${d}">
+        <div class="text-[13px] ${dateClass} mb-1">${d}</div>
+        <div class="flex flex-col gap-[3px]">${pills}</div>
+      </div>`;
+    }
+
+    // Fill remaining cells
+    const totalCells = startDay + days;
+    const remainder = totalCells % 7;
+    if (remainder > 0) {
+      for (let i = 0; i < 7 - remainder; i++) {
+        html += `<div class="bg-sand min-h-[95px] p-2"></div>`;
+      }
+    }
+
+    grid.innerHTML = html;
+
+    // Click handlers
+    grid.querySelectorAll('[data-day]').forEach((cell) => {
+      cell.addEventListener('click', () => showDayDetail(parseInt(cell.dataset.day)));
+    });
+  }
+
+  function renderMobile() {
+    const miniGrid = document.getElementById('mini-grid');
+    const days = getDaysInMonth(currentYear, currentMonth);
+    const startDay = getFirstDayOfWeek(currentYear, currentMonth);
+    const today = new Date();
+    const isThisMonth = today.getFullYear() === currentYear && today.getMonth() === currentMonth;
+    const todayDate = today.getDate();
+
+    let html = '';
+    for (let i = 0; i < startDay; i++) {
+      html += `<div></div>`;
+    }
+    for (let d = 1; d <= days; d++) {
+      const data = getDayData(d);
+      const isToday = isThisMonth && d === todayDate;
+      const hasMeals = !!data;
+      html += `<button class="w-8 h-8 rounded-full text-[11px] cursor-pointer ${isToday ? 'bg-turmeric text-white font-extrabold' : hasMeals ? 'text-bark font-semibold' : 'text-smoke'}" data-mday="${d}">${d}</button>`;
+    }
+    miniGrid.innerHTML = html;
+
+    miniGrid.querySelectorAll('[data-mday]').forEach((btn) => {
+      btn.addEventListener('click', () => showMobileDay(parseInt(btn.dataset.mday)));
+    });
+
+    // Show today by default
+    if (isThisMonth) {
+      showMobileDay(todayDate);
+    } else {
+      showMobileDay(1);
+    }
+  }
+
+  function showMobileDay(day) {
+    const container = document.getElementById('mobile-day-detail');
+    const data = getDayData(day);
+    const dateKey = getDateKey(day);
+    const dayName = new Date(currentYear, currentMonth, day).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+    history.replaceState(null, '', `#${dateKey}`);
+
+    let html = `<div class="bg-white rounded-lg border border-mist p-4">`;
+    html += `<h3 class="text-base font-extrabold text-bark mb-3">${dayName}</h3>`;
+
+    if (!data) {
+      html += `<p class="text-stone text-sm">No meals planned</p>`;
+    } else {
+      for (const mt of mealTypes) {
+        const val = data[mt.key];
+        if (!val) continue;
+        const t = mealTypes.find((m) => m.key === mt.key);
+        html += `<div class="mb-3"><div class="flex items-center gap-1.5 mb-1.5">
+          <span class="w-2 h-2 rounded-full" style="background:${t.dot}"></span>
+          <span class="text-xs font-bold uppercase tracking-wider" style="color:${t.dot}">${t.label}</span>
+        </div>`;
+        html += renderMealCards(val, 'mobile');
+        html += `</div>`;
+      }
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
+  function showDayDetail(day) {
+    const panel = document.getElementById('day-detail');
+    const title = document.getElementById('detail-title');
+    const content = document.getElementById('detail-content');
+    const data = getDayData(day);
+    const dayName = new Date(currentYear, currentMonth, day).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+    // Update URL hash
+    const dateStr = getDateKey(day);
+    history.replaceState(null, '', `#${dateStr}`);
+
+    title.textContent = dayName;
+    panel.classList.remove('hidden');
+
+    if (!data) {
+      content.innerHTML = '<p class="text-stone text-sm">No meals planned for this day.</p>';
+      return;
+    }
+
+    let html = '';
+    for (const mt of mealTypes) {
+      const val = data[mt.key];
+      if (!val) continue;
+      const t = mealTypes.find((m) => m.key === mt.key);
+      html += `<div><div class="flex items-center gap-1.5 mb-2">
+        <span class="w-2.5 h-2.5 rounded-full" style="background:${t.dot}"></span>
+        <span class="text-sm font-bold uppercase tracking-wider" style="color:${t.dot}">${t.label}</span>
+      </div>`;
+      html += renderMealCards(val, 'desktop');
+      html += `</div>`;
+    }
+
+    content.innerHTML = html;
+  }
+
+  init();
+</script>

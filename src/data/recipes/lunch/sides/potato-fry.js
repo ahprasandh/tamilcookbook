@@ -1,0 +1,26 @@
+export default {
+  id: "potato-fry",
+  name_en: "Potato Fry",
+  name_ta: "உருளைக்கிழங்கு வறுவல்",
+  category: "lunch/sides",
+  veg: true,
+  complexity: 1,
+  servings: 4,
+  prep_time_mins: 10,
+  cook_time_mins: 15,
+  ingredients: [
+    { item: "potato", name_en: "Potato", quantity: 3, unit: "nos", shop_category: "vegetable" },
+    { item: "onion", name_en: "Onion", quantity: 1, unit: "nos", shop_category: "vegetable" },
+    { item: "chilli-powder", name_en: "Chilli Powder", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "turmeric", name_en: "Turmeric Powder", quantity: 0.25, unit: "tsp", shop_category: "spices" },
+    { item: "mustard-seeds", name_en: "Mustard Seeds", quantity: 1, unit: "tsp", shop_category: "spices" },
+    { item: "curry-leaves", name_en: "Curry Leaves", quantity: 1, unit: "sprig", shop_category: "vegetable" },
+    { item: "oil", name_en: "Oil", quantity: 2, unit: "tbsp", shop_category: "other" },
+  ],
+  steps: [
+    { order: 1, text_en: "Peel and dice potatoes into small cubes. Boil or parboil until just tender.", text_ta: "உருளைக்கிழங்கை தோல் உரித்து சிறு துண்டுகளாக வெட்டி வேக வைக்கவும்." },
+    { order: 2, text_en: "Heat oil. Add mustard seeds, curry leaves, and sliced onion.", text_ta: "எண்ணெயில் கடுகு, கறிவேப்பிலை, வெங்காயம் தாளிக்கவும்." },
+    { order: 3, text_en: "Add potatoes, turmeric, chilli powder, and salt. Fry on medium heat until crispy.", text_ta: "உருளைக்கிழங்கு, மஞ்சள், மிளகாய்த்தூள், உப்பு சேர்த்து மொறுமொறுப்பாக வறுக்கவும்." },
+  ],
+  tags: ["everyday", "quick", "kids-friendly"],
+};
