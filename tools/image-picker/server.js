@@ -6,6 +6,23 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEST = path.resolve(__dirname, '../../public/images/recipes');
+const RECIPES_DIR = path.resolve(__dirname, '../../src/data/recipes');
+
+function getAllRecipeIds() {
+  const ids = [];
+  function walk(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) walk(path.join(dir, entry.name));
+      else if (entry.name.endsWith('.js')) {
+        const content = fs.readFileSync(path.join(dir, entry.name), 'utf-8');
+        const match = content.match(/id:\s*["']([a-z0-9-]+)["']/);
+        if (match) ids.push(match[1]);
+      }
+    }
+  }
+  walk(RECIPES_DIR);
+  return ids.sort();
+}
 
 const server = http.createServer(async (req, res) => {
   // CORS
@@ -26,6 +43,14 @@ const server = http.createServer(async (req, res) => {
     const files = fs.readdirSync(DEST).filter(f => f.endsWith('.jpg')).map(f => f.replace('.jpg', ''));
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(files));
+    return;
+  }
+
+  // List all recipe IDs dynamically from source files
+  if (req.method === 'GET' && req.url === '/recipes') {
+    const ids = getAllRecipeIds();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(ids));
     return;
   }
 

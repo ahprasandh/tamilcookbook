@@ -95,17 +95,7 @@
 </div><!-- app -->
 
 <script>
-const RECIPES = [
-  "aappam","black-channa-sundal","boiled-groundnut","bread-omelette","carrot-kheer",
-  "chakkara-pongal","cheppankizhangu-fry","chow-chow-kootu","dragon-fruit-shake",
-  "egg-burji","egg-kulambu","egg-rice","grape-juice","honey-chicken",
-  "inipu-kozhukattai","japan-chicken","jeera-juice","kadalai-curry","kara-kozhukattai",
-  "kara-kulambu","keerai-vadai","kose-poriyal","kovakkai-poriyal","lemon-mint",
-  "manga-pachadi","mango-juice","mango-milkshake","mango-rice","parotta",
-  "parotta-salna","paruppu-payasam","pav-bhaji","peas-kuruma","peas-sundal",
-  "poondu-dosa","puli-thanni","seeni-kilangu","strawberry-milkshake","thayir-pachadi",
-  "vazhaikai-fry","vazhaipoo-vadai","veg-pulav","vendakai-poriyal","white-channa-sundal"
-];
+const RECIPES = [];
 
 function displayName(id) {
   return id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -123,9 +113,14 @@ let activeTab = 'missing';
 let allRecipeIds = [];
 
 async function loadExisting() {
-  const res = await fetch('/existing');
-  existing = new Set(await res.json());
-  // allRecipeIds = RECIPES (missing) + all existing
+  const [recipeRes, existingRes] = await Promise.all([
+    fetch('/recipes'),
+    fetch('/existing'),
+  ]);
+  const recipeIds = await recipeRes.json();
+  RECIPES.length = 0;
+  RECIPES.push(...recipeIds);
+  existing = new Set(await existingRes.json());
   const allIds = new Set([...RECIPES, ...existing]);
   allRecipeIds = [...allIds].sort();
 }

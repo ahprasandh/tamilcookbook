@@ -7,7 +7,7 @@ interface Props {
   active?: 'calendar' | 'planner' | 'menu' | 'recipes' | 'shopping' | 'admin' | 'about';
 }
 
-const { title = 'Tamil Cookbook — Monthly Meal Planner', description = 'Plan Tamil South Indian meals monthly. Browse recipes, plan weekly menus, and generate shopping lists.', active = 'calendar' } = Astro.props;
+const { title = 'தமிழ் சமையல்', description = 'Plan Tamil South Indian meals monthly. Browse recipes, plan weekly menus, and generate shopping lists.', active = 'calendar' } = Astro.props;
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 
@@ -33,7 +33,7 @@ const navItems = [
   {/* Desktop Nav */}
   <nav class="hidden md:flex items-center bg-cream border-b border-mist px-8 h-14 sticky top-0 z-50">
     <a href={`${base}`} class="font-heading font-extrabold text-lg text-bark mr-10 tracking-tight no-underline flex items-center gap-2">
-      <img src={`${base}logo.svg`} alt="" class="w-6 h-6" /> Tamil Cookbook
+      <img src={`${base}logo.svg`} alt="" class="w-12 h-12" /> <span class="relative -top-0.5">தமிழ் சமையல்</span>
     </a>
     {navItems.map((item) => (
       <a
