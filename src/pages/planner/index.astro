@@ -898,9 +898,11 @@ const extrasFoods = getFoodsByCategory('extras');
       const mainMatch = mainName.includes(q) || mainTa.includes(q);
       let anyComboVisible = false;
       group.querySelectorAll('[data-assign]').forEach(item => {
+        const itemName = item.dataset.mainName || '';
+        const itemTa = item.dataset.mainTa || '';
         const sides = item.dataset.sides || '';
         const sidesTa = item.dataset.sidesTa || '';
-        const visible = !q || mainMatch || sides.includes(q) || sidesTa.includes(q);
+        const visible = !q || mainMatch || itemName.includes(q) || itemTa.includes(q) || sides.includes(q) || sidesTa.includes(q);
         item.style.display = visible ? '' : 'none';
         if (visible) anyComboVisible = true;
       });
